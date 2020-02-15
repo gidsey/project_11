@@ -8,7 +8,7 @@ class Dog(models.Model):
     """
     name = models.CharField(max_length=255)
     image_filename = models.CharField(max_length=255)
-    breed = models.CharField(max_length=255)
+    breed = models.CharField(max_length=255, blank=True)
     age = models.IntegerField()
     gender = models.CharField(max_length=1)
     size = models.CharField(max_length=2)
