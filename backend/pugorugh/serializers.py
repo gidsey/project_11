@@ -43,6 +43,8 @@ class UserPrefSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'dog',
-            'status',
+            'age',
+            'gender',
+            'size',
         )
+        model = models.UserPref
