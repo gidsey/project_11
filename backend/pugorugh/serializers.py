@@ -48,3 +48,5 @@ class UserPrefSerializer(serializers.ModelSerializer):
             'size',
         )
         model = models.UserPref
+
+

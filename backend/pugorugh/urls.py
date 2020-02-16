@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.urls import path
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 
@@ -17,5 +18,5 @@ urlpatterns = format_suffix_patterns([
             permanent=True
         )),
     url(r'^$', TemplateView.as_view(template_name='index.html')),
-    url(r'^api/user/preferences/$', views.ListCreateUserPrefs.as_view(), name='user-prefs')
+    path('api/user/preferences/', views.ListCreateUserPrefs.as_view(), name='user-prefs')
 ])
