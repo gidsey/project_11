@@ -8,8 +8,6 @@ from . import models
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
-    fields = '__all__'
-
     def create(self, validated_data):
         user = get_user_model().objects.create(
             username=validated_data['username'],
@@ -20,6 +18,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
+
+        fields = (
+            'username',
+            'password',
+        )
 
 
 class DogSerializer(serializers.ModelSerializer):
