@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import permissions
 from rest_framework import generics
+from . import mixins
 
 from . import serializers
 from . import models
@@ -17,7 +18,7 @@ class UserRegisterView(generics.CreateAPIView):
     serializer_class = serializers.UserSerializer
 
 
-class ListCreateUserPrefs(generics.RetrieveUpdateAPIView):
+class ListCreateUserPrefs(mixins.AllowPUTAsCreateMixin, generics.RetrieveUpdateAPIView):
     """
     List / Create User Preferences.
     """
