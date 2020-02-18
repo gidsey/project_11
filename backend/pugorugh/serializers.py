@@ -46,8 +46,7 @@ class UserPrefSerializer(serializers.ModelSerializer):
             'age',
             'gender',
             'size',
-        ),
+        )
         model = models.UserPref
-        lookup_field = None
 
 

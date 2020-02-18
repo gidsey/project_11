@@ -24,14 +24,13 @@ class ListCreateUserPrefs(mixins.CreateModelMixin, generics.RetrieveUpdateAPIVie
     """
     queryset = models.UserPref.objects.all()
     serializer_class = serializers.UserPrefSerializer
-    lookup_field = None
 
     def get_object(self):
         try:
-            user_prefs = models.UserPref.objects.get(user=self.request.user.id)
+            obj = models.UserPref.objects.get(user=self.request.user.id)
         except models.UserPref.DoesNotExist:
-            user_prefs = models.UserPref.objects.create(user=self.request.user)
-        return user_prefs
+            obj = models.UserPref.objects.create(user=self.request.user)
+        return obj
 
     def perform_create(self, serializer):
         serializer.save()
