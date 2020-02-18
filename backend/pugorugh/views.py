@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 
 from rest_framework import permissions
 from rest_framework import generics
@@ -36,3 +35,15 @@ class ListCreateUserPrefs(mixins.CreateModelMixin, generics.RetrieveUpdateAPIVie
 
     def perform_update(self, serializer):
         serializer.save()
+
+
+class GetNextUndecidedDog(generics.RetrieveAPIView):
+    """
+    Get next undecided dog.
+    Endpoint: /api/dog/<pk>/undecided/next/
+    Method: GET
+    """
+    queryset = models.Dog.objects.all()
+    serializer_class = serializers.DogSerializer
+
+
