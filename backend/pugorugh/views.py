@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import permissions
 from rest_framework import generics
 from rest_framework import mixins
+from rest_framework.generics import get_object_or_404
 
 from . import serializers
 from . import models
@@ -45,5 +46,21 @@ class GetNextUndecidedDog(generics.RetrieveAPIView):
     """
     queryset = models.Dog.objects.all()
     serializer_class = serializers.DogSerializer
+
+    def get_object(self):
+        print(self.kwargs)
+
+        undecided_dogs = []
+        for dog in models.Dog.objects.all():
+            undecided_dogs.append(dog.id)
+
+        print(undecided_dogs)
+
+        next_dog = undecided_dogs[int(self.kwargs['pk'])-1]
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset, pk=next_dog)  # Lookup the object
+
+        return obj
+
 
 
