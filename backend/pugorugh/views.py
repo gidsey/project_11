@@ -20,7 +20,9 @@ class UserRegisterView(generics.CreateAPIView):
 
 class ListCreateUserPrefs(mixins.CreateModelMixin, generics.RetrieveUpdateAPIView):
     """
-    List / Create User Preferences.
+    List or Create User Preferences.
+    Endpoint: /api/user/preferences
+    Methods: GET and PUT
     """
     queryset = models.UserPref.objects.all()
     serializer_class = serializers.UserPrefSerializer
@@ -31,9 +33,6 @@ class ListCreateUserPrefs(mixins.CreateModelMixin, generics.RetrieveUpdateAPIVie
         except models.UserPref.DoesNotExist:
             obj = models.UserPref.objects.create(user=self.request.user)
         return obj
-
-    def perform_create(self, serializer):
-        serializer.save()
 
     def perform_update(self, serializer):
         serializer.save()
