@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.conf import settings
+from django.urls import path
 
 from rest_framework.authtoken import views
 
@@ -25,3 +27,9 @@ urlpatterns = [
                                namespace='rest_framework')),
     url(r'^api-token-auth/', views.obtain_auth_token),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+       path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
