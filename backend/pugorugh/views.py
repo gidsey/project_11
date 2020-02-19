@@ -38,7 +38,7 @@ class ListCreateUserPrefs(mixins.CreateModelMixin, generics.RetrieveUpdateAPIVie
         serializer.save()
 
 
-class GetNextUndecidedDog(generics.RetrieveAPIView):
+class Dogs(generics.RetrieveAPIView):
     """
     Get next undecided dog.
     Endpoint: /api/dog/<pk>/undecided/next/
@@ -48,19 +48,14 @@ class GetNextUndecidedDog(generics.RetrieveAPIView):
     serializer_class = serializers.DogSerializer
 
     def get_object(self):
-        print(self.kwargs)
+        pk = self.kwargs['pk']  # Initially set to -1
+        queryset = self.get_queryset()  # Get all the dogs
 
-        undecided_dogs = []
-        for dog in models.Dog.objects.all():
-            undecided_dogs.append(dog.id)
-
-        print(undecided_dogs)
-
-        next_dog = undecided_dogs[int(self.kwargs['pk'])-1]
-        queryset = self.get_queryset()
-        obj = get_object_or_404(queryset, pk=next_dog)  # Lookup the object
-
-        return obj
+        dog = queryset.filter(id__gt=pk).first()  # Retrieve the dog with the next highest id
+        if dog is not None:
+            return dog
+        else:
+            return queryset.first() # Loop back around
 
 
 
