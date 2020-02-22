@@ -49,13 +49,14 @@ class Dogs(generics.RetrieveAPIView):
 
     def get_object(self):
         pk = self.kwargs['pk']  # Initially set to -1
-        queryset = self.get_queryset()  # Get all the dogs
+        all_the_dogs = self.get_queryset()  # Get all the dogs
+        print('all_the_dogs: {}'.format(all_the_dogs))
 
-        dog = queryset.filter(id__gt=pk).first()  # Retrieve the dog with the next highest id
+        dog = all_the_dogs.filter(id__gt=pk).first()  # Retrieve the dog with the next highest id
         if dog is not None:
             return dog
         else:
-            return queryset.first() # Loop back around
+            return all_the_dogs.first()  # Loop back around
 
 
 

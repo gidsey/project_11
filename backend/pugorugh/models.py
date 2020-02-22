@@ -13,6 +13,9 @@ class Dog(models.Model):
     gender = models.CharField(max_length=1)
     size = models.CharField(max_length=2)
 
+    def __str__(self):
+        return '{} {}'.format(self.id, self.name)
+
 
 class UserDog(models.Model):
     """
