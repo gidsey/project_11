@@ -1,15 +1,14 @@
 from django.contrib.auth import get_user_model
 
 from rest_framework import permissions
-from rest_framework import generics
-from rest_framework import mixins
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import RetrieveUpdateAPIView, CreateAPIView
+from rest_framework.mixins import CreateModelMixin
 
 from . import serializers
 from . import models
 
 
-class UserRegisterView(generics.CreateAPIView):
+class UserRegisterView(CreateAPIView):
     """
     Register Users.
     """
@@ -18,7 +17,7 @@ class UserRegisterView(generics.CreateAPIView):
     serializer_class = serializers.UserSerializer
 
 
-class ListCreateUserPrefs(mixins.CreateModelMixin, generics.RetrieveUpdateAPIView):
+class UserPrefs(CreateModelMixin, RetrieveUpdateAPIView):
     """
     List or Create User Preferences.
     Endpoint: /api/user/preferences
@@ -29,13 +28,25 @@ class ListCreateUserPrefs(mixins.CreateModelMixin, generics.RetrieveUpdateAPIVie
 
     def get_object(self):
         try:
-            obj = models.UserPref.objects.get(user=self.request.user.id)
+            #  Get the UserPrefs object for the current user if it exists
+            user_prefs = models.UserPref.objects.get(user=self.request.user.id)
+
         except models.UserPref.DoesNotExist:
-            obj = models.UserPref.objects.create(user=self.request.user)
-        return obj
+            #  Else create a UserPrefs object for the current user
+            user_prefs = models.UserPref.objects.create(user=self.request.user)
+
+        return user_prefs
 
     def perform_update(self, serializer):
         serializer.save()
+
+
+class UserDogStatus(CreateModelMixin, RetrieveUpdateAPIView):
+    """
+
+    """
+
+
 
 
 class Dogs(generics.RetrieveAPIView):
