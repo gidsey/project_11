@@ -51,3 +51,15 @@ class UserPrefSerializer(serializers.ModelSerializer):
         model = models.UserPref
 
 
+class UserDogSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'user',
+            'dog',
+            'status',
+        )
+        model = models.UserDog
+
+
+

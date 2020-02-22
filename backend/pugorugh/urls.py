@@ -19,5 +19,6 @@ urlpatterns = format_suffix_patterns([
         )),
     url(r'^$', TemplateView.as_view(template_name='index.html')),
     path('api/user/preferences/', views.UserPrefs.as_view(), name='user-prefs'),
-    path('api/dog/<pk>/undecided/next/', views.Dogs.as_view(), name='undecided-next')
+    path('api/dog/<pk>/undecided/next/', views.Dogs.as_view(), name='undecided-next'),
+    path('api/dog/<pk>/liked/', views.UserDogStatus.as_view(), name='liked')
 ])

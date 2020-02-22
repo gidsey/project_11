@@ -1,7 +1,11 @@
 from django.contrib.auth import get_user_model
 
 from rest_framework import permissions
-from rest_framework.generics import RetrieveUpdateAPIView, CreateAPIView
+from rest_framework.generics import (
+    RetrieveUpdateAPIView,
+    CreateAPIView,
+    RetrieveAPIView
+)
 from rest_framework.mixins import CreateModelMixin
 
 from . import serializers
@@ -15,6 +19,17 @@ class UserRegisterView(CreateAPIView):
     permission_classes = (permissions.AllowAny,)
     model = get_user_model()
     serializer_class = serializers.UserSerializer
+
+    def get_object(self):
+        try:
+            user_dog = models.UserDog.objects.get(user=self.request.user.id)
+        except models.UserDog.DoesNotExist:
+            user_dog = models.UserDog.objects.create(user=self.request.user)
+        print(user_dog)
+        return user_dog
+
+    def perform_update(self, serializer):
+        serializer.save()
 
 
 class UserPrefs(CreateModelMixin, RetrieveUpdateAPIView):
@@ -30,7 +45,6 @@ class UserPrefs(CreateModelMixin, RetrieveUpdateAPIView):
         try:
             #  Get the UserPrefs object for the current user if it exists
             user_prefs = models.UserPref.objects.get(user=self.request.user.id)
-
         except models.UserPref.DoesNotExist:
             #  Else create a UserPrefs object for the current user
             user_prefs = models.UserPref.objects.create(user=self.request.user)
@@ -43,13 +57,18 @@ class UserPrefs(CreateModelMixin, RetrieveUpdateAPIView):
 
 class UserDogStatus(CreateModelMixin, RetrieveUpdateAPIView):
     """
+    Set User-Dog Status (l)iked or (d)isliked.
+    Endpoints: /api/dog/<pk>/liked/ or /api/dog/<pk>/disliked/
+    Method: PUT
 
     """
+    queryset = models.UserDog.objects.all()
+    serializer_class = serializers.UserDogSerializer
+    print('UserDogStatus')
+    pass
 
 
-
-
-class Dogs(generics.RetrieveAPIView):
+class Dogs(RetrieveAPIView):
     """
     Get next undecided dog.
     Endpoint: /api/dog/<pk>/undecided/next/
