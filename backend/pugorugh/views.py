@@ -20,17 +20,6 @@ class UserRegisterView(CreateAPIView):
     model = get_user_model()
     serializer_class = serializers.UserSerializer
 
-    def get_object(self):
-        try:
-            user_dog = models.UserDog.objects.get(user=self.request.user.id)
-        except models.UserDog.DoesNotExist:
-            user_dog = models.UserDog.objects.create(user=self.request.user)
-        print(user_dog)
-        return user_dog
-
-    def perform_update(self, serializer):
-        serializer.save()
-
 
 class UserPrefs(CreateModelMixin, RetrieveUpdateAPIView):
     """
@@ -64,8 +53,17 @@ class UserDogStatus(CreateModelMixin, RetrieveUpdateAPIView):
     """
     queryset = models.UserDog.objects.all()
     serializer_class = serializers.UserDogSerializer
-    print('UserDogStatus')
-    pass
+
+    def get_object(self):
+        try:
+            user_dog = models.UserDog.objects.get(user=self.request.user.id)
+        except models.UserDog.DoesNotExist:
+            user_dog = models.UserDog.objects.create(user=self.request.user)
+        print(user_dog)
+        return user_dog
+
+    def perform_update(self, serializer):
+        serializer.save()
 
 
 class Dogs(RetrieveAPIView):
