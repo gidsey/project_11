@@ -11,6 +11,8 @@ from rest_framework.mixins import CreateModelMixin
 from . import serializers
 from . import models
 
+from django.db.models import Q
+
 
 class UserRegisterView(CreateAPIView):
     """
@@ -62,16 +64,6 @@ class UserDogStatus(CreateModelMixin, RetrieveUpdateAPIView):
             user_dog = models.UserDog.objects.create(user=self.request.user, dog_id=dog_id, status='l')
         return user_dog
 
-    def perform_create(self, serializer):
-        serializer.save()
-
-    def perform_update(self, serializer):
-        print('serializer: {}'.format(serializer))
-        serializer.save()
-
-
-
-
 
 class Dogs(RetrieveAPIView):
     """
@@ -79,19 +71,30 @@ class Dogs(RetrieveAPIView):
     Endpoint: /api/dog/<pk>/undecided/next/
     Method: GET
     """
-    queryset = models.Dog.objects.all()
+    queryset = models.UserDog.objects.all()
     serializer_class = serializers.DogSerializer
 
     def get_object(self):
         pk = self.kwargs['pk']  # Initially set to -1
-        all_the_dogs = self.get_queryset()  # Get all the dogs
-        print('all_the_dogs: {}'.format(all_the_dogs))
+        # all_the_dogs = self.get_queryset()  # Get all the dogs
+        # print('all_the_dogs: {}'.format(all_the_dogs))
 
-        dog = all_the_dogs.filter(id__gt=pk).first()  # Retrieve the dog with the next highest id
+        liked_dogs = self.get_queryset().select_related('dog').filter(
+            Q(user__exact=self.request.user.id) &
+            Q(status__exact='l')
+            )
+
+
+        disliked_dogs = self.get_queryset()
+
+        print('There are {} liked_dogs.'.format(len(liked_dogs)))
+        print('liked_dogs: {}'.format(liked_dogs))
+
+        dog = liked_dogs.filter(id__gt=pk).first()  # Retrieve the dog with the next highest id
         if dog is not None:
             return dog
         else:
-            return all_the_dogs.first()  # Loop back around
+            return liked_dogs.first()  # Loop back around
 
 
 
