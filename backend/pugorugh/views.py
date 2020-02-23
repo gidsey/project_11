@@ -55,15 +55,22 @@ class UserDogStatus(CreateModelMixin, RetrieveUpdateAPIView):
     serializer_class = serializers.UserDogSerializer
 
     def get_object(self):
+        dog_id = self.kwargs['pk']
         try:
-            user_dog = models.UserDog.objects.get(user=self.request.user.id)
+            user_dog = models.UserDog.objects.get(user=self.request.user.id, dog_id=dog_id)
         except models.UserDog.DoesNotExist:
-            user_dog = models.UserDog.objects.create(user=self.request.user)
-        print(user_dog)
+            user_dog = models.UserDog.objects.create(user=self.request.user, dog_id=dog_id, status='l')
         return user_dog
 
-    def perform_update(self, serializer):
+    def perform_create(self, serializer):
         serializer.save()
+
+    def perform_update(self, serializer):
+        print('serializer: {}'.format(serializer))
+        serializer.save()
+
+
+
 
 
 class Dogs(RetrieveAPIView):

@@ -55,9 +55,8 @@ class UserDogSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'user',
-            'dog',
-            'status',
+            'user_id',
+            'dog_id',
         )
         model = models.UserDog
 
