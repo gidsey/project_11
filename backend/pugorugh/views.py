@@ -79,11 +79,12 @@ class Dogs(RetrieveAPIView):
         # all_the_dogs = self.get_queryset()  # Get all the dogs
         # print('all_the_dogs: {}'.format(all_the_dogs))
 
-        liked_dogs = []
-        for obj in self.get_queryset().prefetch_related('dog').filter(
-            Q(user__exact=self.request.user.id) &
-            Q(status__exact='l')):
-            liked_dogs.append(obj.dog)
+        liked_dogs = self.get_queryset().prefetch_related('dog').filter(
+                Q(user__exact=self.request.user.id) &
+                Q(status__exact='l'))
+
+        for dog in liked_dogs:
+            print(dog.dog)
 
         disliked_dogs = self.get_queryset()
 
@@ -95,6 +96,3 @@ class Dogs(RetrieveAPIView):
             return dog
         else:
             return liked_dogs.first()  # Loop back around
-
-
-
