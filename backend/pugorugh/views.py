@@ -79,20 +79,68 @@ class Dogs(RetrieveAPIView):
         # all_the_dogs = self.get_queryset()  # Get all the dogs
         # print('all_the_dogs: {}'.format(all_the_dogs))
 
-        liked_dogs = self.get_queryset().prefetch_related('dog').filter(
+        liked_dogs = [UserDog.dog for UserDog in self.get_queryset().prefetch_related('dog').filter(
                 Q(user__exact=self.request.user.id) &
-                Q(status__exact='l'))
+                Q(status__exact='l'))]
 
-        for dog in liked_dogs:
-            print(dog.dog)
-
-        disliked_dogs = self.get_queryset()
-
-        print('There are {} liked_dogs.'.format(len(liked_dogs)))
+        print('pk: {}'.format(pk))
         print('liked_dogs: {}'.format(liked_dogs))
+        liked_dogs.sort(key=lambda x: x.id)
 
-        dog = liked_dogs.filter(id__gt=pk).first()  # Retrieve the dog with the next highest id
-        if dog is not None:
+        pick_list = []
+        for dog in liked_dogs:
+            if dog.id > int(pk):
+                pick_list.append(dog)
+        print('pick_list {}'.format(pick_list))
+        # pick_list.sort(key=lambda x: x.id)
+        print('pick_list {}'.format(pick_list))
+        try:
+            dog = pick_list[0]
             return dog
-        else:
-            return liked_dogs.first()  # Loop back around
+        except IndexError:
+            return liked_dogs[0]
+
+
+        #
+
+
+        # if int(pk) == -1:
+        #         #     return liked_dogs[0]
+        # else:
+        #     return liked_dogs[int(liked_dogs.index) + 1]
+
+
+        # for dog in liked_dogs:
+        #     if dog.id > int(pk):
+
+        #
+        # disliked_dogs = self.get_queryset()
+
+        # print('There are {} liked_dogs.'.format(len(liked_dogs)))
+        # print('liked_dogs: {}'.format(liked_dogs))
+
+        # return liked_dogs[1]
+
+
+        # dog = liked_dogs.filter(id__gt=pk).first()  # Retrieve the dog with the next highest id
+        # pos = liked_dogs.index > pk
+        # liked_dogs = iter(liked_dogs)
+
+
+        #
+        # for dog in liked_dogs:
+        #     if dog.id > int(pk):
+        #         unseen_liked_dogs.append(dog)
+        #
+        # print('unseen_liked_dogs {}'.format(unseen_liked_dogs))
+        #
+        # return unseen_liked_dogs[0]
+
+
+
+        # # dog = next(iter(liked_dogs))
+        # if dog is not None:
+        #     return dog
+        # else:
+        #     return liked_dogs[0]
+        #     # return liked_dogs.first()  # Loop back around

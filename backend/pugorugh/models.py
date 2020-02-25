@@ -14,7 +14,7 @@ class Dog(models.Model):
     size = models.CharField(max_length=2)
 
     def __str__(self):
-        return '{} {}, {}'.format(self.id, self.name, self.gender)
+        return '{}, {}'.format(self.id, self.name)
 
 
 class UserDog(models.Model):
