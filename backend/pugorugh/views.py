@@ -58,16 +58,14 @@ class SetStatus(CreateModelMixin, RetrieveUpdateAPIView):
     queryset = models.UserDog.objects.all()
     serializer_class = serializers.UserDogSerializer
 
-
     def get_object(self):
-        print(self.kwargs['status'])
         dog_id = self.kwargs['pk']
-        if self.kwargs['status'] == 'liked':
-            status = 'l'
-        if self.kwargs['status'] == 'disliked':
-            status = 'd'
+        status = self.kwargs['status'][0]  # returns l, d or u
+        print('setstatus={}'.format(status))
         try:
-            user_dog = models.UserDog.objects.get(user=self.request.user.id, dog_id=dog_id)
+            user_dog = models.UserDog.objects.get(user=self.request.user.id, dog_id=dog_id, status=status)
+            print(user_dog.status)
+
         except models.UserDog.DoesNotExist:
             user_dog = models.UserDog.objects.create(user=self.request.user, dog_id=dog_id, status=status)
         return user_dog
@@ -86,8 +84,8 @@ class Dogs(RetrieveAPIView):
             serializer_class = serializers.DogSerializer
 
             def get_object(self):
-                print(self.kwargs['status'])
                 pk = int(self.kwargs['pk'])  # Initially set to -1
+                status = self.kwargs['status'][0]  # returns l, d or u
 
                 liked_dogs = [UserDog.dog for UserDog in self.get_queryset().prefetch_related('dog').filter(
                     Q(user__exact=self.request.user.id) &
@@ -98,7 +96,7 @@ class Dogs(RetrieveAPIView):
                     Q(status__exact='d'))]
 
                 all_the_dogs = models.Dog.objects.all()  # Get all the dogs
-                undecided_dogs = [dog for dog in all_the_dogs if dog not in liked_dogs or disliked_dogs]
+                undecided_dogs = [dog for dog in all_the_dogs if dog not in liked_dogs or dog not in disliked_dogs]
 
                 liked_dogs.sort(key=lambda x: x.id)
                 disliked_dogs.sort(key=lambda x: x.id)
@@ -107,14 +105,25 @@ class Dogs(RetrieveAPIView):
                 print('liked_dogs {}'.format(liked_dogs))
                 print('disliked_dogs {}'.format(disliked_dogs))
                 print('undecided_dogs {}'.format(undecided_dogs))
+                print('status={}'.format(status))
+                if status == 'l':
+                    pick_list = [dog for dog in liked_dogs if dog.id > pk]  # Filtered list of liked_dogs
+                if status == 'd':
+                    pick_list = [dog for dog in disliked_dogs if dog.id > pk]  # Filtered list of disliked_dogs
+                if status == 'u':
+                    pick_list = [dog for dog in undecided_dogs if dog.id > pk]  # Filtered list of undecided
 
+                print('pick_list {}'.format(pick_list))
 
-
-                pick_list = [dog for dog in liked_dogs if dog.id > pk]  # Filtered list of liked_dogs
                 try:
                     dog = pick_list[0]  # Show the next dog
                     return dog
                 except IndexError:
-                    return liked_dogs[0]  # Loop back around
+                    if status == 'l':
+                        return liked_dogs[0]  # Loop back around
+                    if status == 'd':
+                        return disliked_dogs[0]  # Loop back around
+                    if status == 'u':
+                        return undecided_dogs[0]  # Loop back around
 
 
