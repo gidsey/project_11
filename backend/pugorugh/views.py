@@ -1,14 +1,15 @@
 from django.contrib.auth import get_user_model
-from django.urls import reverse
+from django.http import Http404
 from django.db.models import Q
 
-from rest_framework import permissions
+from rest_framework import permissions, status
 from rest_framework.generics import (
     RetrieveUpdateAPIView,
     CreateAPIView,
     RetrieveAPIView
 )
 from rest_framework.mixins import CreateModelMixin
+from rest_framework.response import Response
 
 from . import serializers
 from . import models
@@ -63,9 +64,10 @@ class SetStatus(CreateModelMixin, RetrieveUpdateAPIView):
         status = self.kwargs['status'][0]  # returns l, d or u
         print('setstatus={}'.format(status))
         try:
-            user_dog = models.UserDog.objects.get(user=self.request.user.id, dog_id=dog_id, status=status)
+            user_dog = models.UserDog.objects.get(user=self.request.user.id, dog_id=dog_id)
+            user_dog.status = status
+            user_dog.save()
             print(user_dog.status)
-
         except models.UserDog.DoesNotExist:
             user_dog = models.UserDog.objects.create(user=self.request.user, dog_id=dog_id, status=status)
         return user_dog
@@ -120,10 +122,18 @@ class Dogs(RetrieveAPIView):
                     return dog
                 except IndexError:
                     if status == 'l':
-                        return liked_dogs[0]  # Loop back around
+                        if liked_dogs:
+                            return liked_dogs[0]  # Loop back around
+                        else:
+                            return models.Dog.objects.none()
                     if status == 'd':
-                        return disliked_dogs[0]  # Loop back around
+                        try:
+                            return disliked_dogs[0]  # Loop back around
+                        except IndexError:
+                            return Response(status=status.HTTP_404_NOT_FOUND)
                     if status == 'u':
-                        return undecided_dogs[0]  # Loop back around
-
+                        try:
+                            return undecided_dogs[0]  # Loop back around
+                        except IndexError:
+                            return Http404
 
