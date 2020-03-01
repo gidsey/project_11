@@ -94,7 +94,7 @@ class Dogs(RetrieveAPIView):
 
         all_the_dogs = models.Dog.objects.all().filter(
             Q(gender__icontains='f') &
-            Q(size__icontains='l')
+            Q(size__icontains='m')
         )   # Need to get actual user prefs here (note l and xl)
 
         selected_dogs = liked_dogs + disliked_dogs
