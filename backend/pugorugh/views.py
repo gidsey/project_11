@@ -79,7 +79,7 @@ class Dogs(RetrieveAPIView):
     """
     queryset = models.UserDog.objects.all()
     serializer_class = serializers.DogSerializer
-c
+
     def get_object(self):
         pk = int(self.kwargs['pk'])  # Initially set to -1
         current_status = self.kwargs['status'][0]  # returns l, d or u
@@ -92,7 +92,11 @@ c
             Q(user__exact=self.request.user.id) &
             Q(status__exact='d'))]
 
-        all_the_dogs = models.Dog.objects.all()
+        all_the_dogs = models.Dog.objects.all().filter(
+            Q(gender__icontains='f') &
+            Q(size__icontains='l')
+        )   # Need to get actual user prefs here (note l and xl)
+
         selected_dogs = liked_dogs + disliked_dogs
         undecided_dogs = [dog for dog in all_the_dogs if dog not in selected_dogs]  # Return only undecided dogs
 
