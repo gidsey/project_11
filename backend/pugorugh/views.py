@@ -129,20 +129,12 @@ class Dogs(RetrieveAPIView):
         disliked_dogs.sort(key=lambda x: x.id)
         undecided_dogs.sort(key=lambda x: x.id)  # Sort each list by ID
 
-        print()
-        print('undecided_dogs {}'.format(undecided_dogs))
-        print('liked_dogs {}'.format(liked_dogs))
-        print('disliked_dogs {}'.format(disliked_dogs))
-        print()
-
         if current_status == 'l':
             pick_list = [dog for dog in liked_dogs if dog.id > pk]  # Filtered list of liked_dogs
         if current_status == 'd':
             pick_list = [dog for dog in disliked_dogs if dog.id > pk]  # Filtered list of disliked_dogs
         if current_status == 'u':
             pick_list = [dog for dog in undecided_dogs if dog.id > pk]  # Filtered list of undecided
-
-        print('pick_list {}'.format(pick_list))
 
         try:
             dog = pick_list[0]  # Show the next dog
