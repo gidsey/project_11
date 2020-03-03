@@ -67,7 +67,6 @@ class SetStatus(CreateModelMixin, RetrieveUpdateAPIView):
             user_dog = models.UserDog.objects.create(user=self.request.user, dog_id=dog_id, status=new_status)
         return user_dog
 
-
 class Dogs(RetrieveAPIView):
     """
     Get next liked/disliked/undecided dog.
@@ -83,6 +82,16 @@ class Dogs(RetrieveAPIView):
     def get_object(self):
         pk = int(self.kwargs['pk'])  # Initially set to -1
         current_status = self.kwargs['status'][0]  # returns l, d or u
+
+        user_prefs = models.UserPref.objects.all().get(user=self.request.user)
+
+        gender = user_prefs.gender
+        age = user_prefs.age
+        size = user_prefs.size
+
+        print('Gender: {}'.format(gender))
+        print('Age: {}'.format(age))
+        print('Size: {}'.format(size))
 
         matched_dogs = models.Dog.objects.all().filter(
             Q(gender__icontains='f') &
