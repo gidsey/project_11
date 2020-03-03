@@ -83,23 +83,34 @@ class Dogs(RetrieveAPIView):
     def get_object(self):
         pk = int(self.kwargs['pk'])  # Initially set to -1
         current_status = self.kwargs['status'][0]  # returns l, d or u
-
-        print(self.kwargs)
-
         user_prefs = models.UserPref.objects.all().get(user=self.request.user)
 
-        gender = user_prefs.gender.split(',')
         age = user_prefs.age.split(',')
-        size = user_prefs.size.split(',')
 
-        print('Gender: {}'.format(gender))
+        if age[0] == 'b':
+            age_lower = 0
+            age_upper = 10
+        if age[0] == 'y':
+            age_lower = 11
+            age_upper = 20
+        if age[0] == 'a':
+            age_lower = 21
+            age_upper = 89
+        if age[0] == 's':
+            age_lower = 90
+            age_upper = 200  # This approach needs work / re-thinking.
+
+        age_lower = 0
+        age_upper = 200
+
         print('Age: {}'.format(age))
-        print('Size: {}'.format(size))
 
         matched_dogs = models.Dog.objects.all().filter(
-            Q(gender__in=gender) &
-            Q(size__in=size)
-        )   # Need to get actual user prefs here (note l and xl)
+            Q(gender__in=user_prefs.gender.split(',')) &
+            Q(size__in=user_prefs.size.split(',')) &
+            Q(age__gt=age_lower) &
+            Q(age__lte=age_upper)
+        )
 
         print('There are {} matched dogs'.format(len(matched_dogs)))
 
@@ -137,18 +148,22 @@ class Dogs(RetrieveAPIView):
             dog = pick_list[0]  # Show the next dog
             return dog
         except IndexError:
+
             if current_status == 'l':
                 if liked_dogs:
-                    return liked_dogs[0]  # Loop back around
+                    return liked_dogs[0]  # Loop back around to 1st liked dog
                 else:
-                    return Http404
+                    return Http404 # There are no results to show
+
             if current_status == 'd':
                 if disliked_dogs:
-                    return disliked_dogs[0]  # Loop back around
+                    return disliked_dogs[0]  # Loop back around to 1st disliked dog
                 else:
-                    return Response(status=current_status.HTTP_404_NOT_FOUND)
+                    return Response(status=current_status.HTTP_404_NOT_FOUND) # There are no results to show
+
             if current_status == 'u':
                 if undecided_dogs:
-                    return undecided_dogs[0]  # Loop back around
+                    return undecided_dogs[0]  # Loop back around to 1st undecided dog
                 else:
-                    return Http404
+                    return Http404 # There are no results to show
+
