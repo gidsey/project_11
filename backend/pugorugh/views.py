@@ -84,6 +84,11 @@ class Dogs(RetrieveAPIView):
         pk = int(self.kwargs['pk'])  # Initially set to -1
         current_status = self.kwargs['status'][0]  # returns l, d or u
 
+        matched_dogs = models.Dog.objects.all().filter(
+            Q(gender__icontains='f') &
+            Q(size__icontains='m')
+        )   # Need to get actual user prefs here (note l and xl)
+
         liked_dogs = [UserDog.dog for UserDog in self.get_queryset().prefetch_related('dog').filter(
             Q(user__exact=self.request.user.id) &
             Q(status__exact='l'))]
@@ -92,13 +97,8 @@ class Dogs(RetrieveAPIView):
             Q(user__exact=self.request.user.id) &
             Q(status__exact='d'))]
 
-        all_the_dogs = models.Dog.objects.all().filter(
-            Q(gender__icontains='f') &
-            Q(size__icontains='m')
-        )   # Need to get actual user prefs here (note l and xl)
-
-        selected_dogs = liked_dogs + disliked_dogs
-        undecided_dogs = [dog for dog in all_the_dogs if dog not in selected_dogs]  # Return only undecided dogs
+        appraised_dogs = liked_dogs + disliked_dogs
+        undecided_dogs = [dog for dog in matched_dogs if dog not in appraised_dogs]  # Return only undecided dogs
 
         liked_dogs.sort(key=lambda x: x.id)
         disliked_dogs.sort(key=lambda x: x.id)
