@@ -83,33 +83,39 @@ class Dogs(RetrieveAPIView):
         pk = int(self.kwargs['pk'])  # Initially set to -1
         current_status = self.kwargs['status'][0]  # returns l, d or u
         user_prefs = models.UserPref.objects.all().get(user=self.request.user)
+        pick_list = []
+        age_prefs = user_prefs.age.split(',')
+        gender_prefs = user_prefs.gender.split(',')
+        size_prefs = user_prefs.size.split(',')
+        b_lower = b_upper = y_lower = y_upper = a_lower = a_upper = s_lower = s_upper = -1
 
-        age = user_prefs.age.split(',')
+        if 'b' in age_prefs:
+            b_lower = 0
+            b_upper = 10
+        if 'y' in age_prefs:
+            y_lower = 11
+            y_upper = 20
+        if 'a' in age_prefs:
+            a_lower = 21
+            a_upper = 70
+        if 's' in age_prefs:
+            s_lower = 71
+            s_upper = 200  # Set the age ranges
 
-        if age[0] == 'b':
-            age_lower = 0
-            age_upper = 10
-        if age[0] == 'y':
-            age_lower = 11
-            age_upper = 20
-        if age[0] == 'a':
-            age_lower = 21
-            age_upper = 89
-        if age[0] == 's':
-            age_lower = 90
-            age_upper = 200  # This approach needs work / re-thinking.
-
-        age_lower = 0
-        age_upper = 200
-
-        print('Age: {}'.format(age))
+        print('Gender Prefs: {}'.format(gender_prefs))
+        print('Age Prefs: {}'.format(age_prefs))
+        print('Size Prefs: {}'.format(size_prefs))
 
         matched_dogs = models.Dog.objects.all().filter(
-            Q(gender__in=user_prefs.gender.split(',')) &
-            Q(size__in=user_prefs.size.split(',')) &
-            Q(age__gt=age_lower) &
-            Q(age__lte=age_upper)
-        )
+            Q(gender__in=gender_prefs) &
+            Q(size__in=size_prefs))
+
+        matched_dogs = matched_dogs.filter(
+            Q(age__range=(b_lower, b_upper)) |
+            Q(age__range=(y_lower, y_upper)) |
+            Q(age__range=(a_lower, a_upper)) |
+            Q(age__range=(s_lower, s_upper))
+              )
 
         print('There are {} matched dogs'.format(len(matched_dogs)))
 
