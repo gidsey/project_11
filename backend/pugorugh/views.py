@@ -1,15 +1,14 @@
 from django.contrib.auth import get_user_model
-from django.http import Http404
 from django.db.models import Q
 
-from rest_framework import permissions, status
+from rest_framework import permissions
 from rest_framework.generics import (
     RetrieveUpdateAPIView,
     CreateAPIView,
     RetrieveAPIView
 )
+from rest_framework.exceptions import NotFound
 from rest_framework.mixins import CreateModelMixin
-from rest_framework.response import Response
 
 from . import serializers
 from . import models
@@ -150,20 +149,19 @@ class Dogs(RetrieveAPIView):
         except IndexError:
 
             if current_status == 'l':
-                if liked_dogs:
+                try:
                     return liked_dogs[0]  # Loop back around to 1st liked dog
-                else:
-                    return Http404 # There are no results to show
+                except IndexError:
+                    raise NotFound  # There are no liked dogs to show
 
             if current_status == 'd':
-                if disliked_dogs:
+                try:
                     return disliked_dogs[0]  # Loop back around to 1st disliked dog
-                else:
-                    return Response(status=current_status.HTTP_404_NOT_FOUND) # There are no results to show
+                except IndexError:
+                    raise NotFound  # There are no disliked dogs to show
 
             if current_status == 'u':
-                if undecided_dogs:
+                try:
                     return undecided_dogs[0]  # Loop back around to 1st undecided dog
-                else:
-                    return Http404 # There are no results to show
-
+                except IndexError:
+                    raise NotFound  # There are no undecided dogs to show
