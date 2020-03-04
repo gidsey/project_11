@@ -102,10 +102,6 @@ class Dogs(RetrieveAPIView):
             s_lower = 71
             s_upper = 200  # Set the age ranges
 
-        print('Gender Prefs: {}'.format(gender_prefs))
-        print('Age Prefs: {}'.format(age_prefs))
-        print('Size Prefs: {}'.format(size_prefs))
-
         matched_dogs = models.Dog.objects.all().filter(
             Q(gender__in=gender_prefs) &
             Q(size__in=size_prefs))
