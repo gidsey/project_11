@@ -116,16 +116,15 @@ class Dogs(RetrieveAPIView):
         liked_dogs = [UserDog.dog for UserDog in self.get_queryset().prefetch_related('dog').filter(
             Q(user__exact=self.request.user.id) &
             Q(status__exact='l'))]
+        liked_dogs.sort(key=lambda x: x.id)
 
         disliked_dogs = [UserDog.dog for UserDog in self.get_queryset().prefetch_related('dog').filter(
             Q(user__exact=self.request.user.id) &
             Q(status__exact='d'))]
+        disliked_dogs.sort(key=lambda x: x.id)
 
         appraised_dogs = liked_dogs + disliked_dogs
         undecided_dogs = [dog for dog in matched_dogs if dog not in appraised_dogs]  # Return only undecided dogs
-
-        liked_dogs.sort(key=lambda x: x.id)
-        disliked_dogs.sort(key=lambda x: x.id)
         undecided_dogs.sort(key=lambda x: x.id)  # Sort each list by ID
 
         print()
@@ -136,12 +135,12 @@ class Dogs(RetrieveAPIView):
 
         if current_status == 'l':
             pick_list = [dog for dog in liked_dogs if dog.id > pk]  # Filtered list of liked_dogs
+
         if current_status == 'd':
             pick_list = [dog for dog in disliked_dogs if dog.id > pk]  # Filtered list of disliked_dogs
+
         if current_status == 'u':
             pick_list = [dog for dog in undecided_dogs if dog.id > pk]  # Filtered list of undecided
-
-        print('pick_list {}'.format(pick_list))
 
         try:
             dog = pick_list[0]  # Show the next dog
