@@ -1,4 +1,8 @@
 venv
 README.txt
 .DS_Store
-* /__pycache__/
+/__pycache__/
+backend/__pycache__/
+backend/backend/__pycache__/
+backend/pugorugh/__pycache__/
+backend/pugorugh/migrations/__pycache__/
