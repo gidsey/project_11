@@ -129,6 +129,8 @@ class Dogs(RetrieveAPIView):
         undecided_dogs = [dog for dog in matched_dogs if dog not in appraised_dogs]  # Return only undecided dogs
         undecided_dogs.sort(key=lambda x: x.id)  # Sort each list by ID
 
+        print('There are {} undecided dogs'.format(len(undecided_dogs)))
+
         if current_status == 'l':
             pick_list = [dog for dog in liked_dogs if dog.id > pk]  # Filtered list of liked_dogs
 
