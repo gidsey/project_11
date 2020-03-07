@@ -67,26 +67,18 @@ class SetStatus(CreateModelMixin, RetrieveUpdateAPIView):
         return user_dog
 
 
-class Dogs(RetrieveAPIView):
+class UndecidedDogs(RetrieveAPIView):
     """
-    Get next liked/disliked/undecided dog.
-    Endpoints:
-            /api/dog/<pk>/liked/next/
-            /api/dog/<pk>/disliked/next/
+    Get next undecided dog.
+    Endpoint:
             /api/dog/<pk>/undecided/next/
     Method(s): GET
     """
-    queryset = models.UserDog.objects.all()
     serializer_class = serializers.DogSerializer
 
-    def get_object(self):
-        pk = int(self.kwargs['pk'])  # Initially set to -1
-        current_status = self.kwargs['status'][0]  # returns l, d or u
+    def get_queryset(self):
         user_prefs = models.UserPref.objects.all().get(user=self.request.user)
-        pick_list = []
         age_prefs = user_prefs.age.split(',')
-        gender_prefs = user_prefs.gender.split(',')
-        size_prefs = user_prefs.size.split(',')
         b_lower = b_upper = y_lower = y_upper = a_lower = a_upper = s_lower = s_upper = -1
 
         if 'b' in age_prefs:
@@ -103,62 +95,106 @@ class Dogs(RetrieveAPIView):
             s_upper = 200  # Set the age ranges
 
         matched_dogs = models.Dog.objects.all().filter(
-            Q(gender__in=gender_prefs) &
-            Q(size__in=size_prefs))
+            Q(gender__in=user_prefs.gender.split(',')) &
+            Q(size__in=user_prefs.size.split(',')))
 
         matched_dogs = matched_dogs.filter(
             Q(age__range=(b_lower, b_upper)) |
             Q(age__range=(y_lower, y_upper)) |
             Q(age__range=(a_lower, a_upper)) |
             Q(age__range=(s_lower, s_upper))
-              )
+        )
+        print('{} matched dogs'.format(len(matched_dogs)))
+        print('Matched Dogs:{}'.format(matched_dogs))
+        return matched_dogs
 
-        print('There are {} matched dogs'.format(len(matched_dogs)))
+    def get_object(self):
+        pk = int(self.kwargs['pk'])  # Initially set to -1
+        return self.get_queryset().first(id__gt=pk)
 
-        liked_dogs = [UserDog.dog for UserDog in self.get_queryset().prefetch_related('dog').filter(
-            Q(user__exact=self.request.user.id) &
-            Q(status__exact='l'))]
-        liked_dogs.sort(key=lambda x: x.id)
 
-        disliked_dogs = [UserDog.dog for UserDog in self.get_queryset().prefetch_related('dog').filter(
-            Q(user__exact=self.request.user.id) &
-            Q(status__exact='d'))]
-        disliked_dogs.sort(key=lambda x: x.id)
 
-        appraised_dogs = liked_dogs + disliked_dogs
-        undecided_dogs = [dog for dog in matched_dogs if dog not in appraised_dogs]  # Return only undecided dogs
-        undecided_dogs.sort(key=lambda x: x.id)  # Sort each list by ID
+class ChosenDogs(RetrieveAPIView):
+    """
+    Get next liked / disliked dog.
+    Endpoints:
+            /api/dog/<pk>/liked/next/
+            /api/dog/<pk>/disliked/next/
+    Method(s): GET
+    """
+    serializer_class = serializers.DogSerializer
 
-        print('There are {} undecided dogs'.format(len(undecided_dogs)))
+    def get_queryset(self):
+        pass
 
-        if current_status == 'l':
-            pick_list = [dog for dog in liked_dogs if dog.id > pk]  # Filtered list of liked_dogs
+    def get_object(self):
+        pk = int(self.kwargs['pk'])  # Initially set to -1
+        current_status = self.kwargs['status'][0]  # returns l, d or u
+        pass
 
-        if current_status == 'd':
-            pick_list = [dog for dog in disliked_dogs if dog.id > pk]  # Filtered list of disliked_dogs
-
-        if current_status == 'u':
-            pick_list = [dog for dog in undecided_dogs if dog.id > pk]  # Filtered list of undecided
-
-        try:
-            dog = pick_list[0]  # Show the next dog
-            return dog
-        except IndexError:
-
-            if current_status == 'l':
-                try:
-                    return liked_dogs[0]  # Loop back around to 1st liked dog
-                except IndexError:
-                    raise NotFound  # There are no liked dogs to show
-
-            if current_status == 'd':
-                try:
-                    return disliked_dogs[0]  # Loop back around to 1st disliked dog
-                except IndexError:
-                    raise NotFound  # There are no disliked dogs to show
-
-            if current_status == 'u':
-                try:
-                    return undecided_dogs[0]  # Loop back around to 1st undecided dog
-                except IndexError:
-                    raise NotFound  # There are no undecided dogs to show
+    #     liked_dogs = models.UserDog.objects.all().prefetch_related('dog').filter(
+    #         Q(user__exact=self.request.user.id) &
+    #         Q(status__exact='l'))
+    #
+    #     disliked_dogs = models.UserDog.objects.all().prefetch_related('dog').filter(
+    #         Q(user__exact=self.request.user.id) &
+    #         Q(status__exact='d'))
+    #
+    #     undecided_dogs = self.get_queryset.filter(
+    #         Q(id__in=models.UserDog.objects.file)
+    #
+    #     pick_list = []
+    #
+    #     liked_dogs = [UserDog.dog for UserDog in self.get_queryset().prefetch_related('dog').filter(
+    #         Q(user__exact=self.request.user.id) &
+    #         Q(status__exact='l'))]
+    #     liked_dogs.sort(key=lambda x: x.id)
+    #
+    #     disliked_dogs = [UserDog.dog for UserDog in self.get_queryset().prefetch_related('dog').filter(
+    #         Q(user__exact=self.request.user.id) &
+    #         Q(status__exact='d'))]
+    #     disliked_dogs.sort(key=lambda x: x.id)
+    #
+    #     appraised_dogs = liked_dogs + disliked_dogs
+    #     undecided_dogs = [dog for dog in self.get_queryset() if dog not in appraised_dogs]
+    #     Return
+    #     only
+    #     undecided
+    #     dogs
+    #     undecided_dogs.sort(key=lambda x: x.id)  # Sort each list by ID
+    #
+    #     print('{} undecided dogs'.format(len(undecided_dogs)))
+    #     print('{} liked dogs'.format(len(liked_dogs)))
+    #     print('{} disliked dogs'.format(len(disliked_dogs)))
+    #
+    #     if current_status == 'l':
+    #         pick_list = [dog for dog in liked_dogs if dog.id > pk]  # Filtered list of liked_dogs
+    #
+    #     if current_status == 'd':
+    #         pick_list = [dog for dog in disliked_dogs if dog.id > pk]  # Filtered list of disliked_dogs
+    #
+    #     if current_status == 'u':
+    #         pick_list = [dog for dog in undecided_dogs if dog.id > pk]  # Filtered list of undecided
+    #
+    # try:
+    #     dog = pick_list[0]  # Show the next dog
+    #     return dog
+    # except IndexError:
+    #
+    #     if current_status == 'l':
+    #         try:
+    #             return liked_dogs[0]  # Loop back around to 1st liked dog
+    #         except IndexError:
+    #             raise NotFound  # There are no liked dogs to show
+    #
+    #     if current_status == 'd':
+    #         try:
+    #             return disliked_dogs[0]  # Loop back around to 1st disliked dog
+    #         except IndexError:
+    #             raise NotFound  # There are no disliked dogs to show
+    #
+    #     if current_status == 'u':
+    #         try:
+    #             return undecided_dogs[0]  # Loop back around to 1st undecided dog
+    #         except IndexError:
+    #             raise NotFound  # There are no undecided dogs to show
