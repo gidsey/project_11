@@ -106,12 +106,18 @@ class UndecidedDogs(RetrieveAPIView):
         )
         print('{} matched dogs'.format(len(matched_dogs)))
         print('Matched Dogs:{}'.format(matched_dogs))
-        return matched_dogs
+        if not matched_dogs:
+            raise NotFound  # No matching dogs so raise 404
+        else:
+            return matched_dogs
 
     def get_object(self):
         pk = int(self.kwargs['pk'])  # Initially set to -1
-        return self.get_queryset().first(id__gt=pk)
-
+        dog = self.get_queryset().filter(id__gt=pk).first()  # Retrieve the dog with the next highest id
+        if dog is not None:
+            return dog
+        else:
+            return self.get_queryset().first()  # Loop back around
 
 
 class ChosenDogs(RetrieveAPIView):
