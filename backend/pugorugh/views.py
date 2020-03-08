@@ -1,6 +1,3 @@
-from operator import attrgetter
-from itertools import chain
-
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 
