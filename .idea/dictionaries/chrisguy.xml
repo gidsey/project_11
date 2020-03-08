@@ -2,6 +2,7 @@
   <dictionary name="chrisguy">
     <words>
       <w>prefs</w>
+      <w>querysets</w>
     </words>
   </dictionary>
 </component>
