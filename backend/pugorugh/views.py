@@ -1,3 +1,6 @@
+from operator import attrgetter
+from itertools import chain
+
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 
@@ -109,23 +112,41 @@ class Dogs(RetrieveAPIView):
                 Q(age__range=(a_lower, a_upper)) |
                 Q(age__range=(s_lower, s_upper))
             )
+            print('{} matched_dogs'.format(len(matched_dogs)))
 
-            undecided_dogs = matched_dogs.exclude(
+            unrated_dogs = matched_dogs.exclude(
+                dog_user__user_id__exact=self.request.user.id
+                )   # Include all dogs that have yet to be rated
+
+            print('{} 1st filter unrated_dogs'.format(len(unrated_dogs)))
+
+            u_dogs = matched_dogs.filter(
                 Q(dog_user__user_id__exact=self.request.user.id) &
-                Q(dog_user__status__exact='l') |
-                Q(dog_user__status__exact='d')
-            )
+                Q(dog_user__status__exact='u')
+                )   # Include all dogs explicitly rated as 'undecided'
+
+            print('{} 2nd filter u_dogs'.format(len(u_dogs)))
+
+            undecided_dogs = (unrated_dogs | u_dogs).distinct()
+
+
+            print('{} undecided_dogs'.format(len(undecided_dogs)))
+            print('undecided_dogs: {}'.format(undecided_dogs))
 
             if not undecided_dogs:
                 raise NotFound  # No matching dogs so raise 404
             else:
+                print('{} undecided_dogs'.format(len(undecided_dogs)))
                 return undecided_dogs
 
         if current_status == 'l' or current_status == 'd':  # liked or disliked dogs
-            chosen_dogs = models.Dog.objects.all().filter(dog_user__status__exact=current_status)
+            chosen_dogs = models.Dog.objects.all().filter(
+                Q(dog_user__user_id__exact=self.request.user.id) &
+                Q(dog_user__status__exact=current_status))
             if not chosen_dogs:
                 raise NotFound
             else:
+                print('{} chosen_dogs'.format(len(chosen_dogs)))
                 return chosen_dogs
 
     def get_object(self):
@@ -135,4 +156,3 @@ class Dogs(RetrieveAPIView):
             return dog
         else:
             return self.get_queryset().first()  # Loop back around
-
