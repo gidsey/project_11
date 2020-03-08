@@ -67,76 +67,92 @@ class SetStatus(CreateModelMixin, RetrieveUpdateAPIView):
         return user_dog
 
 
-class UndecidedDogs(RetrieveAPIView):
+class Dogs(RetrieveAPIView):
     """
-    Get next undecided dog.
-    Endpoint:
+    Get next undecided / liked / disliked dog.
+    Endpoints:
             /api/dog/<pk>/undecided/next/
+            /api/dog/<pk>/liked/next/
+            /api/dog/<pk>/disliked/next/
     Method(s): GET
     """
     serializer_class = serializers.DogSerializer
 
     def get_queryset(self):
-        user_prefs = models.UserPref.objects.all().get(user=self.request.user)
-        liked_dogs = models.UserDog.objects.all().filter(
-            Q(user__exact=self.request.user.id) &
-            Q(status__exact='l'))
-        disliked_dogs = models.UserDog.objects.all().filter(
-            Q(user__exact=self.request.user.id) &
-            Q(status__exact='d'))
+        current_status = self.kwargs['status'][0]  # returns l, d or u
 
-        age_prefs = user_prefs.age.split(',')
-        b_lower = b_upper = y_lower = y_upper = a_lower = a_upper = s_lower = s_upper = -1
+        if current_status == 'u':  # undecided dogs
+            user_prefs = models.UserPref.objects.all().get(user=self.request.user)
+            age_prefs = user_prefs.age.split(',')
+            b_lower = b_upper = y_lower = y_upper = a_lower = a_upper = s_lower = s_upper = -1
 
-        if 'b' in age_prefs:
-            b_lower = 0
-            b_upper = 10
-        if 'y' in age_prefs:
-            y_lower = 11
-            y_upper = 20
-        if 'a' in age_prefs:
-            a_lower = 21
-            a_upper = 70
-        if 's' in age_prefs:
-            s_lower = 71
-            s_upper = 200  # Set the age ranges
+            if 'b' in age_prefs:
+                b_lower = 0
+                b_upper = 10
+            if 'y' in age_prefs:
+                y_lower = 11
+                y_upper = 20
+            if 'a' in age_prefs:
+                a_lower = 21
+                a_upper = 70
+            if 's' in age_prefs:
+                s_lower = 71
+                s_upper = 200  # Set the age ranges
 
-        matched_dogs = models.Dog.objects.all().filter(
-            Q(gender__in=user_prefs.gender.split(',')) &
-            Q(size__in=user_prefs.size.split(',')))
+            matched_dogs = models.Dog.objects.all().filter(
+                Q(gender__in=user_prefs.gender.split(',')) &
+                Q(size__in=user_prefs.size.split(',')))
 
-        matched_dogs = matched_dogs.filter(
-            Q(age__range=(b_lower, b_upper)) |
-            Q(age__range=(y_lower, y_upper)) |
-            Q(age__range=(a_lower, a_upper)) |
-            Q(age__range=(s_lower, s_upper))
-        )
+            matched_dogs = matched_dogs.filter(
+                Q(age__range=(b_lower, b_upper)) |
+                Q(age__range=(y_lower, y_upper)) |
+                Q(age__range=(a_lower, a_upper)) |
+                Q(age__range=(s_lower, s_upper))
+            )
 
-        print('{} liked dogs'.format(len(liked_dogs)))
-        print('Liked Dogs:{}'.format(liked_dogs))
-        liked_dogs_ids = [dog.dog_id for dog in liked_dogs]
-        print('liked_dogs_ids:{}'.format(liked_dogs_ids))
+            # undecided_dogs = matched_dogs.filter(dog_user__user_id__exact=self.request.user.id)
+            # print('undecided_dogs for this user: {}'.format(undecided_dogs))
 
-        print('{} disliked dogs'.format(len(disliked_dogs)))
-        print('Disliked Dogs:{}'.format(disliked_dogs))
-        disliked_dogs_ids = [dog.dog_id for dog in disliked_dogs]
-        print('disliked_dogs_ids:{}'.format(disliked_dogs_ids))
+            undecided_dogs = matched_dogs.filter(
+                Q(dog_user__user_id__exact=self.request.user.id) &
+                Q(dog_user__status__isnull=True)
+            )
 
-        chosen_dogs = set(liked_dogs_ids + disliked_dogs_ids)
-        print('chosen_dogs: {}'.format(chosen_dogs))
+            print('{} matched dogs'.format(len(matched_dogs)))
+            print('Matched Dogs:{}'.format(matched_dogs))
 
-        print('{} matched dogs'.format(len(matched_dogs)))
-        print('Matched Dogs:{}'.format(matched_dogs))
+            # undecided_dogs = matched_dogs.exclude(id__in=chosen_dogs)
 
-        undecided_dogs = matched_dogs.exclude(id__in=chosen_dogs)
+            print('{} undecided dogs'.format(len(undecided_dogs)))
+            print('Undecided Dogs:{}'.format(undecided_dogs))
 
-        print('{} undecided dogs'.format(len(undecided_dogs)))
-        print('Undecided Dogs:{}'.format(undecided_dogs))
+            if not undecided_dogs:
+                raise NotFound  # No matching dogs so raise 404
+            else:
+                return undecided_dogs
 
-        if not undecided_dogs:
-            raise NotFound  # No matching dogs so raise 404
-        else:
-            return undecided_dogs
+        if current_status == 'l' or current_status == 'd':  # liked or disliked dogs
+            return models.Dog.objects.all().filter(dog_user__status__exact=current_status)
+
+        # print('{} liked dogs'.format(len(liked_dogs)))
+        # print('Liked Dogs:{}'.format(liked_dogs))
+        # liked_dogs_ids = [dog.dog_id for dog in liked_dogs]
+        # print('liked_dogs_ids:{}'.format(liked_dogs_ids))
+
+        # print('{} disliked dogs'.format(len(disliked_dogs)))
+        # print('Disliked Dogs:{}'.format(disliked_dogs))
+        # disliked_dogs_ids = [dog.dog_id for dog in disliked_dogs]
+        # print('disliked_dogs_ids:{}'.format(disliked_dogs_ids))
+
+        # chosen_dogs = set(liked_dogs_ids + disliked_dogs_ids)
+        # print('chosen_dogs: {}'.format(chosen_dogs))
+
+        # liked_dogs = models.UserDog.objects.all().filter(
+        #     Q(user__exact=self.request.user.id) &
+        #     Q(status__exact='l'))
+        # disliked_dogs = models.UserDog.objects.all().filter(
+        #     Q(user__exact=self.request.user.id) &
+        #     Q(status__exact='d'))
 
     def get_object(self):
         pk = int(self.kwargs['pk'])  # Initially set to -1
