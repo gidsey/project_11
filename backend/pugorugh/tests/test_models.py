@@ -17,5 +17,8 @@ class MineralModelTests(TestCase):
 
     def test_new_dog(self):
         """Test Dog is set correctly"""
-        p = Dog.objects.get(name='Patch')
-        self.assertEqual(str(p), '1, Patch (m)')
+        new_dog = Dog.objects.get(name='Patch')
+        self.assertEqual(str(new_dog), '1, Patch (m)')
+        self.assertEqual(new_dog.age, 42)
+        self.assertEqual(new_dog.size, 's')
+        self.assertEqual(new_dog.breed, 'Border Collie')

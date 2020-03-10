@@ -83,7 +83,7 @@ class Dogs(RetrieveAPIView):
 
         if current_status == 'u':  # undecided dogs
             user_prefs = models.UserPref.objects.all().get(user=self.request.user)
-            age_prefs = user_prefs.age.split(',')
+            age_prefs = set(user_prefs.age.split(','))
             b_lower = b_upper = y_lower = y_upper = a_lower = a_upper = s_lower = s_upper = -1
 
             if 'b' in age_prefs:
