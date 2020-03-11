@@ -12,6 +12,7 @@ from rest_framework.mixins import CreateModelMixin
 
 from . import serializers
 from . import models
+from .utils import get_age_range
 
 
 class UserRegisterView(CreateAPIView):
@@ -83,32 +84,21 @@ class Dogs(RetrieveAPIView):
 
         if current_status == 'u':  # undecided dogs
             user_prefs = models.UserPref.objects.all().get(user=self.request.user)
-            age_prefs = set(user_prefs.age.split(','))
-            b_lower = b_upper = y_lower = y_upper = a_lower = a_upper = s_lower = s_upper = -1
-
-            if 'b' in age_prefs:
-                b_lower = 0
-                b_upper = 10
-            if 'y' in age_prefs:
-                y_lower = 11
-                y_upper = 20
-            if 'a' in age_prefs:
-                a_lower = 21
-                a_upper = 70
-            if 's' in age_prefs:
-                s_lower = 71
-                s_upper = 200  # Set the age ranges
+            age = user_prefs.age.split(',')
+            # Use the utils helper function.
+            age_ranges = get_age_range(age)
 
             matched_dogs = models.Dog.objects.all().filter(
                 Q(gender__in=user_prefs.gender.split(',')) &
                 Q(size__in=user_prefs.size.split(',')))
 
             matched_dogs = matched_dogs.filter(
-                Q(age__range=(b_lower, b_upper)) |
-                Q(age__range=(y_lower, y_upper)) |
-                Q(age__range=(a_lower, a_upper)) |
-                Q(age__range=(s_lower, s_upper))
+                Q(age__range=(age_ranges['baby_start'], age_ranges['baby_end'])) |
+                Q(age__range=(age_ranges['young_start'], age_ranges['young_end'])) |
+                Q(age__range=(age_ranges['adult_start'], age_ranges['adult_end'])) |
+                Q(age__range=(age_ranges['senior_start'], age_ranges['senior_end']))
             )
+
             unrated_dogs = matched_dogs.exclude(
                 dog_user__user_id__exact=self.request.user.id
             )  # Include all dogs that have yet to be rated
@@ -141,3 +131,4 @@ class Dogs(RetrieveAPIView):
             return dog
         else:
             return self.get_queryset().first()  # Loop back around
+
