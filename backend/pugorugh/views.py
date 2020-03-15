@@ -88,11 +88,11 @@ class Dogs(RetrieveAPIView):
             # Use the utils helper function.
             age_ranges = get_age_range(age)
 
-            matched_dogs = models.Dog.objects.all().filter(
+            gender_size_match = models.Dog.objects.all().filter(
                 Q(gender__in=user_prefs.gender.split(',')) &
                 Q(size__in=user_prefs.size.split(',')))
 
-            matched_dogs = matched_dogs.filter(
+            matched_dogs = gender_size_match.filter(
                 Q(age__range=(age_ranges['baby_start'], age_ranges['baby_end'])) |
                 Q(age__range=(age_ranges['young_start'], age_ranges['young_end'])) |
                 Q(age__range=(age_ranges['adult_start'], age_ranges['adult_end'])) |
