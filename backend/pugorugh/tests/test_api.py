@@ -41,6 +41,7 @@ class TestAuth(APITestCase):
 class GetNextTests(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user('ringo', 'starr@thebeatles.com', 'ringopassword')
+        self.user_2 = User.objects.create_user('george', 'harrison@thebeatles.com', 'georgepassword')
 
         self.user_prefs = models.UserPref.objects.create(
             age='b,y,a,s',
@@ -220,6 +221,18 @@ class GetNextTests(APITestCase):
                 'size': 's'
             }
         )
+
+    def test_not_found(self):
+        """
+        Test that a 404 is raised if no results are found
+        """
+
+        self.client = APIClient()
+        self.client.force_authenticate(self.user_2)
+
+        url = reverse('get-next', kwargs={'status': 'disliked', 'pk': -1})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
 class StatusTests(APITestCase):
