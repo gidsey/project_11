@@ -131,4 +131,3 @@ class Dogs(RetrieveAPIView):
             return dog
         else:
             return self.get_queryset().first()  # Loop back around
-

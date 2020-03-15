@@ -98,7 +98,6 @@ class GetNextTests(APITestCase):
             status='l'
         )
 
-
     def test_undecided_not_rated(self):
         """
         Ensure that when the dog is yet to be rated the
@@ -146,6 +145,31 @@ class GetNextTests(APITestCase):
                 'age': 24,
                 'gender': 'f',
                 'size': 'xl'
+            }
+        )
+
+    def test_undecided_loop(self):
+        """
+        Ensure that when the dog is yet to be rated the
+        next undecided Dog is returned as valid JSON.
+        """
+
+        self.client = APIClient()
+        self.client.force_authenticate(self.user)
+
+        url = reverse('get-next', kwargs={'status': 'undecided', 'pk': 200})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertJSONEqual(
+            str(response.content, encoding='utf8'),
+            {
+                'id': 1,
+                'name': 'Francesca',
+                'image_filename': '1.jpg',
+                'breed': 'Labrador',
+                'age': 72,
+                'gender': 'f',
+                'size': 'l'
             }
         )
 
@@ -224,8 +248,6 @@ class StatusTests(APITestCase):
             status='d'
         )
 
-
-
     def test_set_liked(self):
         """
         Ensure that the liked status is set correctly.
@@ -301,3 +323,7 @@ class StatusTests(APITestCase):
                 'dog_id': 2,
             }
         )
+
+class UserPrefsTests(APITestCase):
+    def setUp(self):
+        pass
