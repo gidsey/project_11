@@ -1,3 +1,5 @@
+import sys
+
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 
@@ -84,20 +86,24 @@ class Dogs(RetrieveAPIView):
 
         if current_status == 'u':  # undecided dogs
             user_prefs = models.UserPref.objects.all().get(user=self.request.user)
-            age = user_prefs.age.split(',')
+            age = user_prefs.age.split(',') # Returns 'b,y,a,s' or similar
             # Use the utils helper function.
             age_ranges = get_age_range(age)
-
+            size_ar = sys.getsizeof(age_ranges)
+            print('size age_ranges: {} '.format(size_ar))  # was 360
             gender_size_match = models.Dog.objects.all().filter(
                 Q(gender__in=user_prefs.gender.split(',')) &
                 Q(size__in=user_prefs.size.split(',')))
 
             matched_dogs = gender_size_match.filter(
-                Q(age__range=(age_ranges['baby_start'], age_ranges['baby_end'])) |
-                Q(age__range=(age_ranges['young_start'], age_ranges['young_end'])) |
-                Q(age__range=(age_ranges['adult_start'], age_ranges['adult_end'])) |
-                Q(age__range=(age_ranges['senior_start'], age_ranges['senior_end']))
+                Q(age__in=age_ranges)
             )
+            # matched_dogs = gender_size_match.filter(
+            #     Q(age__range=(age_ranges['baby_start'], age_ranges['baby_end'])) |
+            #     Q(age__range=(age_ranges['young_start'], age_ranges['young_end'])) |
+            #     Q(age__range=(age_ranges['adult_start'], age_ranges['adult_end'])) |
+            #     Q(age__range=(age_ranges['senior_start'], age_ranges['senior_end']))
+            # )
 
             unrated_dogs = matched_dogs.exclude(
                 dog_user__user_id__exact=self.request.user.id
