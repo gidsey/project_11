@@ -129,3 +129,14 @@ class Dogs(RetrieveAPIView):
             return dog
         else:
             return self.get_queryset().first()  # Loop back around
+
+
+class AddDog(CreateAPIView):
+    """
+    Provide a method that allows a
+    Dog instance to be added to the DB.
+    Endpoints:
+            /api/dog/add/
+    Method(s): POST
+    """
+    pass
