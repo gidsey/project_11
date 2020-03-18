@@ -5,8 +5,8 @@ from rest_framework import permissions
 from rest_framework.generics import (
     RetrieveUpdateAPIView,
     CreateAPIView,
-    RetrieveAPIView
-)
+    RetrieveAPIView,
+    DestroyAPIView)
 from rest_framework.exceptions import NotFound
 from rest_framework.mixins import CreateModelMixin
 
@@ -138,5 +138,20 @@ class AddDog(CreateAPIView):
     Endpoints:
             /api/dog/add/
     Method(s): POST
+    """
+
+    serializer_class = serializers.DogSerializer
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+
+class DeleteDog(DestroyAPIView):
+    """
+    Provide a method that allows a
+    Dog instance to be deleted from the DB.
+    Endpoints:
+            /api/dog/<pk>/delete/
+    Method(s): DELETE
     """
     pass

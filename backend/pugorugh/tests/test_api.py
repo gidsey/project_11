@@ -268,7 +268,7 @@ class StatusTests(APITestCase):
         self.client = APIClient()
         self.client.force_authenticate(self.user)
 
-        url = reverse('set_status', kwargs={'status': 'liked', 'pk': 1})
+        url = reverse('set-status', kwargs={'status': 'liked', 'pk': 1})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertJSONEqual(
@@ -287,7 +287,7 @@ class StatusTests(APITestCase):
         self.client = APIClient()
         self.client.force_authenticate(self.user)
 
-        url = reverse('set_status', kwargs={'status': 'disliked', 'pk': 1})
+        url = reverse('set-status', kwargs={'status': 'disliked', 'pk': 1})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertJSONEqual(
@@ -306,7 +306,7 @@ class StatusTests(APITestCase):
         self.client = APIClient()
         self.client.force_authenticate(self.user)
 
-        url = reverse('set_status', kwargs={'status': 'undecided', 'pk': 1})
+        url = reverse('set-status', kwargs={'status': 'undecided', 'pk': 1})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertJSONEqual(
@@ -325,7 +325,7 @@ class StatusTests(APITestCase):
         self.client = APIClient()
         self.client.force_authenticate(self.user)
 
-        url = reverse('set_status', kwargs={'status': 'liked', 'pk': 2})
+        url = reverse('set-status', kwargs={'status': 'liked', 'pk': 2})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertJSONEqual(
