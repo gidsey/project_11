@@ -26,7 +26,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class DogSerializer(serializers.ModelSerializer):
-
     class Meta:
         fields = (
             'id',
@@ -38,6 +37,15 @@ class DogSerializer(serializers.ModelSerializer):
             'size',
         )
         model = models.Dog
+
+    def validate_age(self, value):
+        if value in range(1, 201):
+            return value
+        raise serializers.ValidationError(
+            "Age must be an integer between 1 and 200"
+        )
+
+
 
 
 class UserPrefSerializer(serializers.ModelSerializer):
@@ -59,6 +67,3 @@ class UserDogSerializer(serializers.ModelSerializer):
             'dog_id',
         )
         model = models.UserDog
-
-
-
