@@ -1,3 +1,4 @@
+import re
 from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
@@ -45,6 +46,15 @@ class DogSerializer(serializers.ModelSerializer):
             "Age must be an integer between 1 and 200"
         )
 
+    def validate_gender(self, value):
+        if re.match(r'[mfu]', value):
+            return value
+        raise serializers.ValidationError(
+            "Gender must be 'm' for male, 'f' for female or 'u' for unknown"
+        )
+
+    # def validate_size(self, value):
+    #     pass
 
 
 
