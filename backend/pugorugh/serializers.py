@@ -26,6 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
 
+# noinspection PyMethodMayBeStatic
 class DogSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
@@ -39,6 +40,7 @@ class DogSerializer(serializers.ModelSerializer):
         )
         model = models.Dog
 
+    #  Ensure that Age is an integer between 1 and 200
     def validate_age(self, value):
         if value in range(1, 201):
             return value
@@ -46,16 +48,21 @@ class DogSerializer(serializers.ModelSerializer):
             "Age must be an integer between 1 and 200"
         )
 
+    #  Ensure that Gender is either m, f or u
     def validate_gender(self, value):
-        if re.match(r'[mfu]', value):
+        if re.match(r'^[mfu]$', value):
             return value
         raise serializers.ValidationError(
             "Gender must be 'm' for male, 'f' for female or 'u' for unknown"
         )
 
-    # def validate_size(self, value):
-    #     pass
-
+    #  Ensure that size is either s, m, l or xl
+    def validate_size(self, value):
+        if re.match(r'^(s|m|l|xl)$', value):
+            return value
+        raise serializers.ValidationError(
+            "Size must be 's' for small, 'm' for medium, 'l' for large or 'xl' for extra large"
+        )
 
 
 class UserPrefSerializer(serializers.ModelSerializer):
