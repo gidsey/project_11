@@ -40,6 +40,14 @@ class DogSerializer(serializers.ModelSerializer):
         )
         model = models.Dog
 
+    # Ensure the the image_filename ends with .jpg, .jpeg or .png
+    def validate_image_filename(self, value):
+        if re.match(r'^.+\.(jpg|jpeg|png)$', value):
+            return value
+        raise serializers.ValidationError(
+            "image_filename must end with '.jpg', '.jpeg' or '.png'"
+        )
+
     #  Ensure that Age is an integer between 1 and 200
     def validate_age(self, value):
         if value in range(1, 201):
