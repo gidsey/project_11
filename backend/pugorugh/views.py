@@ -64,7 +64,11 @@ class SetStatus(CreateModelMixin, RetrieveUpdateAPIView):
             user_dog.status = new_status
             user_dog.save()
         except models.UserDog.DoesNotExist:
-            user_dog = models.UserDog.objects.create(user=self.request.user, dog_id=dog_id, status=new_status)
+            user_dog = models.UserDog.objects.create(
+                user=self.request.user,
+                dog_id=dog_id,
+                status=new_status
+            )
         return user_dog
 
 
@@ -82,10 +86,11 @@ class Dogs(RetrieveAPIView):
     def get_queryset(self):
         current_status = self.kwargs['status'][0]  # returns l, d or u
 
-        if current_status == 'u':  # undecided dogs
+        # undecided dogs
+        if current_status == 'u':
             user_prefs = models.UserPref.objects.all().get(user=self.request.user)
             age = user_prefs.age.split(',')  # returns a combination of 'b,y,a,s'
-            # Use the utils helper function.
+            # Use the utils helper function
             age_ranges = get_age_range(age)
 
             # Filter by Gender, Size and Age Range
@@ -106,14 +111,16 @@ class Dogs(RetrieveAPIView):
                 Q(dog_user__status__exact='u')
             )
 
-            undecided_dogs = (unrated_dogs | rated_dogs).distinct()  # Combine querysets & remove duplicates
+            # Combine querysets & remove duplicates
+            undecided_dogs = (unrated_dogs | rated_dogs).distinct()
 
             if not undecided_dogs:
                 raise NotFound  # No matching dogs so raise 404
             else:
                 return undecided_dogs
 
-        if current_status == 'l' or current_status == 'd':  # liked or disliked dogs
+        # liked or disliked dogs
+        if current_status == 'l' or current_status == 'd':
             chosen_dogs = models.Dog.objects.all().filter(
                 Q(dog_user__user_id__exact=self.request.user.id) &
                 Q(dog_user__status__exact=current_status))
@@ -124,7 +131,9 @@ class Dogs(RetrieveAPIView):
 
     def get_object(self):
         pk = int(self.kwargs['pk'])  # Initially set to -1
-        dog = self.get_queryset().filter(id__gt=pk).first()  # Retrieve the dog with the next highest id
+
+        # Retrieve the dog with the next highest id
+        dog = self.get_queryset().filter(id__gt=pk).first()
         if dog is not None:
             return dog
         else:

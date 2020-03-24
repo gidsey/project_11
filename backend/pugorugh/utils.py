@@ -1,3 +1,4 @@
+#  Set the age ranges
 AGE_RANGES = {
     'b': set(range(0, 11)),
     'y': set(range(11, 21)),
@@ -9,7 +10,7 @@ AGE_RANGES = {
 def get_age_range(age_list):
     """
     Using the AGE RANGES above return the age values to search for.
-    Thanks to @zen on Treehouse Slack for their help and input to this.
+    Thanks to @zen on Treehouse Slack for help and input on this.
     :param age_list:
     :return: a set of integers that includes all age values to search against
     """
