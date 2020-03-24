@@ -149,5 +149,53 @@
     "age": 2,
     "gender": "f",
     "size": "m"
+  },
+    {
+    "name": "Scooby-Doo",
+    "image_filename": "scooby-doo.jpg",
+    "breed": "Great Dane",
+    "age": 30,
+    "gender": "m",
+    "size": "l"
+  },
+    {
+    "name": "Droopy",
+    "image_filename": "droopy.png",
+    "breed": "Basset Hound",
+    "age": 60,
+    "gender": "m",
+    "size": "s"
+  },
+    {
+    "name": "Gnasher",
+    "image_filename": "gnasher.jpg",
+    "breed": "Wire-haired Tripehound",
+    "age": 76,
+    "gender": "m",
+    "size": "m"
+  },
+    {
+    "name": "Gromit",
+    "image_filename": "gromit.jpg",
+    "breed": "Beagle",
+    "age": 32,
+    "gender": "m",
+    "size": "m"
+  },
+    {
+    "name": "Snoopy",
+    "image_filename": "snoopy.jpg",
+    "breed": "Beagle",
+    "age": 46,
+    "gender": "m",
+    "size": "s"
+  },
+      {
+    "name": "Huckleberry Hound",
+    "image_filename": "huckleberry_hound.jpeg",
+    "breed": "Bluetick Coonhound",
+    "age": 58,
+    "gender": "m",
+    "size": "l"
   }
 ]
