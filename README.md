@@ -1,5 +1,7 @@
 # Pug or Ugh
 
+![application screenshot](pugorugh_screenshot.png)
+
 ## Requirements
 
 Create the models, serializers, and views to power the provided Angular
