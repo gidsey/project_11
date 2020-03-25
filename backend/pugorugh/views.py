@@ -148,7 +148,6 @@ class AddDog(CreateAPIView):
             /api/dog/add/
     Method(s): POST
     """
-
     serializer_class = serializers.DogSerializer
 
     def perform_create(self, serializer):
@@ -163,17 +162,8 @@ class DeleteDog(DestroyAPIView):
             /api/dog/<pk>/delete/
     Method(s): DELETE
     """
-    queryset = models.UserDog.objects.all()
+    queryset = models.Dog.objects.all()
     serializer_class = serializers.DogSerializer
 
-    def get_object(self):
-        pk = int(self.kwargs['pk'])
-
-        dog = self.get_queryset().filter(id__exact=pk)
-        if dog is not None:
-            return dog
-        else:
-            raise NotFound
-
-    def delete(self, request, *args, **kwargs):
-        print(request)
+    def perform_destroy(self, instance):
+        instance.delete()
