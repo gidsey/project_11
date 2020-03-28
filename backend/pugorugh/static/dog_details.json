@@ -5,7 +5,8 @@
     "breed": "Labrador",
     "age": 72,
     "gender": "f",
-    "size": "l"
+    "size": "l",
+    "microchipped": "True"
   },
   {
     "name": "Hank",
@@ -13,7 +14,8 @@
     "breed": "French Bulldog",
     "age": 14,
     "gender": "m",
-    "size": "s"
+    "size": "s",
+    "microchipped": "True"
   },
   {
     "name": "Muffin",
@@ -21,7 +23,8 @@
     "breed": "Boxer",
     "age": 24,
     "gender": "f",
-    "size": "xl"
+    "size": "xl",
+    "microchipped": "True"
   },
   {
     "name": "Bjorn",
@@ -29,7 +32,8 @@
     "breed": "Swedish Vallhund",
     "age": 36,
     "gender": "m",
-    "size": "m"
+    "size": "m",
+    "microchipped": "True"
   },
   {
     "name": "Hercules",
@@ -37,7 +41,8 @@
     "breed": "Chihuahua",
     "age": 96,
     "gender": "m",
-    "size": "s"
+    "size": "s",
+    "microchipped": "True"
   },
   {
     "name": "Pez",
@@ -45,7 +50,8 @@
     "breed": "Unknown Mix",
     "age": 3,
     "gender": "m",
-    "size": "m"
+    "size": "m",
+    "microchipped": "True"
   },
   {
     "name": "Cocoa",
@@ -53,7 +59,8 @@
     "breed": "Chocolate Labrador Mix",
     "age": 60,
     "gender": "f",
-    "size": "l"
+    "size": "l",
+    "microchipped": "True"
   },
   {
     "name": "Lord Barkley",
@@ -61,7 +68,8 @@
     "breed": "English Bulldog",
     "age": 26,
     "gender": "m",
-    "size": "m"
+    "size": "m",
+    "microchipped": "True"
   },
   {
     "name": "Sandy",
@@ -69,7 +77,8 @@
     "breed": "Goldendoodle",
     "age": 14,
     "gender": "f",
-    "size": "l"
+    "size": "l",
+    "microchipped": "True"
   },
   {
     "name": "Cookie",
@@ -77,7 +86,8 @@
     "breed": "Golden Spaniel Mix",
     "age": 48,
     "gender": "f",
-    "size": "m"
+    "size": "m",
+    "microchipped": "True"
   },
   {
     "name": "Custard",
@@ -85,7 +95,8 @@
     "breed": "Yellow Lab",
     "age": 84,
     "gender": "m",
-    "size": "l"
+    "size": "l",
+    "microchipped": "True"
   },
   {
     "name": "Captain Jack",
@@ -93,7 +104,8 @@
     "breed": "Pug Mix",
     "age": 66,
     "gender": "m",
-    "size": "s"
+    "size": "s",
+    "microchipped": "True"
   },
   {
     "name": "Gypsy",
@@ -101,7 +113,8 @@
     "breed": "Golden Retriever",
     "age": 30,
     "gender": "f",
-    "size": "l"
+    "size": "l",
+    "microchipped": "True"
   },
   {
     "name": "Bella",
@@ -109,7 +122,8 @@
     "breed": "Collie",
     "age": 14,
     "gender": "f",
-    "size": "l"
+    "size": "l",
+    "microchipped": "True"
   },
   {
     "name": "Gizmo",
@@ -117,14 +131,16 @@
     "breed": "English Springer Spaniel",
     "age": 78,
     "gender": "m",
-    "size": "l"
+    "size": "l",
+    "microchipped": "True"
   },
   {
     "name": "Prince",
     "image_filename": "16.jpg",
     "age": 81,
     "gender": "m",
-    "size": "s"
+    "size": "s",
+    "microchipped": "True"
   },
   {
     "name": "Sadie",
@@ -132,7 +148,8 @@
     "breed": "Springer Spaniel",
     "age": 50,
     "gender": "f",
-    "size": "l"
+    "size": "l",
+    "microchipped": "True"
   },
   {
     "name": "Zumba",
@@ -140,7 +157,8 @@
     "breed": "Yorkshire Terrier",
     "age": 11,
     "gender": "m",
-    "size": "s"
+    "size": "s",
+    "microchipped": "True"
   },
   {
     "name": "Elsa",
@@ -148,54 +166,61 @@
     "breed": "Husky",
     "age": 2,
     "gender": "f",
-    "size": "m"
+    "size": "m",
+    "microchipped": "True"
   },
-    {
+  {
     "name": "Scooby-Doo",
     "image_filename": "scooby-doo.jpg",
     "breed": "Great Dane",
     "age": 30,
     "gender": "m",
-    "size": "l"
+    "size": "l",
+    "microchipped": "False"
   },
-    {
+  {
     "name": "Droopy",
     "image_filename": "droopy.png",
     "breed": "Basset Hound",
     "age": 60,
     "gender": "m",
-    "size": "s"
+    "size": "s",
+    "microchipped": "False"
   },
-    {
+  {
     "name": "Gnasher",
     "image_filename": "gnasher.jpg",
     "breed": "Wire-haired Tripehound",
     "age": 76,
     "gender": "m",
-    "size": "m"
+    "size": "m",
+    "microchipped": "False"
   },
-    {
+  {
     "name": "Gromit",
     "image_filename": "gromit.jpg",
     "breed": "Beagle",
     "age": 32,
     "gender": "m",
-    "size": "m"
+    "size": "m",
+    "microchipped": "False"
   },
-    {
+  {
     "name": "Snoopy",
     "image_filename": "snoopy.jpg",
     "breed": "Beagle",
     "age": 46,
     "gender": "m",
-    "size": "s"
+    "size": "s",
+    "microchipped": "False"
   },
-      {
+  {
     "name": "Huckleberry Hound",
     "image_filename": "huckleberry_hound.jpeg",
     "breed": "Bluetick Coonhound",
     "age": 58,
     "gender": "m",
-    "size": "l"
+    "size": "l",
+    "microchipped": "False"
   }
 ]

@@ -12,7 +12,7 @@ from rest_framework.mixins import CreateModelMixin
 
 from . import serializers
 from . import models
-from .utils import get_age_range
+from .utils import get_age_range, get_microchipped
 
 
 class UserRegisterView(CreateAPIView):
@@ -90,11 +90,21 @@ class Dogs(RetrieveAPIView):
         if current_status == 'u':
             user_prefs = models.UserPref.objects.all().get(user=self.request.user)
             age = user_prefs.age.split(',')  # returns a combination of 'b,y,a,s'
-            # Use the utils helper function
+
+            # Use the utils helper functions
             age_ranges = get_age_range(age)
+            microchipped = get_microchipped(user_prefs.microchipped)
+
+            #  Filer by Microchipped (no_preference, yes or no)
+            if microchipped == 'no_preference':
+                chipped_dogs = models.Dog.objects.all()
+            else:
+                chipped_dogs = models.Dog.objects.all().filter(
+                    microchipped__exact=microchipped
+                )
 
             # Filter by Gender, Size and Age Range
-            matched_dogs = models.Dog.objects.all().filter(
+            matched_dogs = chipped_dogs.filter(
                 Q(gender__in=user_prefs.gender.split(',')) &
                 Q(size__in=user_prefs.size.split(',')) &
                 Q(age__in=age_ranges)
@@ -117,6 +127,7 @@ class Dogs(RetrieveAPIView):
             if not undecided_dogs:
                 raise NotFound  # No matching dogs so raise 404
             else:
+                print('{} Undecided dogs'.format(len(undecided_dogs)))
                 return undecided_dogs
 
         # liked or disliked dogs

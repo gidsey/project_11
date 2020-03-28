@@ -37,6 +37,7 @@ class DogSerializer(serializers.ModelSerializer):
             'age',
             'gender',
             'size',
+            'microchipped'
         )
         model = models.Dog
 
