@@ -35,7 +35,8 @@ class UserPref(models.Model):
     age = models.CharField(max_length=255)
     gender = models.CharField(max_length=255)
     size = models.CharField(max_length=255)
-    microchipped = models.CharField(max_length=255, default='u')
+    microchipped = models.CharField(default='e', max_length=1)  # Set default to 'e' for either
+
 
 
 
