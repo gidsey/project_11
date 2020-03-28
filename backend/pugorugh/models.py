@@ -12,6 +12,7 @@ class Dog(models.Model):
     age = models.IntegerField()
     gender = models.CharField(max_length=1)
     size = models.CharField(max_length=2)
+    microchipped = models.BooleanField(default=False)
 
     def __str__(self):
         return '{}, {} ({})'.format(self.id, self.name, self.gender)
@@ -34,6 +35,8 @@ class UserPref(models.Model):
     age = models.CharField(max_length=255)
     gender = models.CharField(max_length=255)
     size = models.CharField(max_length=255)
+    microchipped = models.CharField(max_length=255, default='u')
+
 
 
 
