@@ -127,7 +127,7 @@ class Dogs(RetrieveAPIView):
             if not undecided_dogs:
                 raise NotFound  # No matching dogs so raise 404
             else:
-                print('{} Undecided dogs'.format(len(undecided_dogs)))
+                # print('{} Undecided dogs'.format(len(undecided_dogs)))
                 return undecided_dogs
 
         # liked or disliked dogs
