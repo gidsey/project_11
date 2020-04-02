@@ -84,6 +84,17 @@ class UserPrefSerializer(serializers.ModelSerializer):
         )
         model = models.UserPref
 
+    # #  Ensure that size is a comma separated list containing only s, m, l or xl
+    # def validate_size(self, value):
+    #
+    #     if re.match(r'^(s|m|l|xl)$', value):
+    #         return value
+    #     raise serializers.ValidationError(
+    #         "Size must be 's' for small, 'm' for medium, 'l' for large or 'xl' for extra large"
+    #     )
+
+
+
 
 class UserDogSerializer(serializers.ModelSerializer):
     class Meta:
