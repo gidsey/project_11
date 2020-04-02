@@ -97,14 +97,10 @@ class Dogs(RetrieveAPIView):
 
             #  Filer by Microchipped (no_preference, yes or no)
             if microchipped == 'no_preference':
-                chipped_dogs = models.Dog.objects.all().filter(
-                    dog_user__blacklist__exact=False
-                )
+                chipped_dogs = models.Dog.objects.all()
             else:
                 chipped_dogs = models.Dog.objects.all().filter(
-                    Q(dog_user__blacklist__exact=False) &
-                    Q(microchipped__exact=microchipped)
-                )
+                    microchipped__exact=microchipped)
 
             # Filter by Gender, Size and Age Range
             matched_dogs = chipped_dogs.filter(
@@ -121,7 +117,8 @@ class Dogs(RetrieveAPIView):
             # Get all dogs explicitly rated as 'undecided'
             rated_dogs = matched_dogs.filter(
                 Q(dog_user__user_id__exact=self.request.user.id) &
-                Q(dog_user__status__exact='u')
+                Q(dog_user__status__exact='u') &
+                Q(dog_user__blacklist__exact=False)
             )
 
             # Combine querysets & remove duplicates
@@ -137,7 +134,9 @@ class Dogs(RetrieveAPIView):
         if current_status == 'l' or current_status == 'd':
             chosen_dogs = models.Dog.objects.all().filter(
                 Q(dog_user__user_id__exact=self.request.user.id) &
-                Q(dog_user__status__exact=current_status))
+                Q(dog_user__status__exact=current_status) &
+                Q(dog_user__blacklist__exact=False))
+
             if not chosen_dogs:
                 raise NotFound
             else:
