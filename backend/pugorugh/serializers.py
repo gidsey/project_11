@@ -76,6 +76,7 @@ class DogSerializer(serializers.ModelSerializer):
         )
 
 
+# noinspection PyMethodMayBeStatic
 class UserPrefSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
