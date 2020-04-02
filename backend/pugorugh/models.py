@@ -25,6 +25,7 @@ class UserDog(models.Model):
     user = models.ForeignKey(User, related_name='user_dog', on_delete=models.CASCADE)
     dog = models.ForeignKey(Dog, related_name='dog_user', on_delete=models.CASCADE)
     status = models.CharField(max_length=1)
+    blacklist = models.BooleanField(default=False)
 
 
 class UserPref(models.Model):
