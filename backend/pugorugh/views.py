@@ -97,10 +97,13 @@ class Dogs(RetrieveAPIView):
 
             #  Filer by Microchipped (no_preference, yes or no)
             if microchipped == 'no_preference':
-                chipped_dogs = models.Dog.objects.all()
+                chipped_dogs = models.Dog.objects.all().filter(
+                    dog_user__blacklist__exact=False
+                )
             else:
                 chipped_dogs = models.Dog.objects.all().filter(
-                    microchipped__exact=microchipped
+                    Q(dog_user__blacklist__exact=False) &
+                    Q(microchipped__exact=microchipped)
                 )
 
             # Filter by Gender, Size and Age Range
@@ -127,7 +130,7 @@ class Dogs(RetrieveAPIView):
             if not undecided_dogs:
                 raise NotFound  # No matching dogs so raise 404
             else:
-                # print('{} Undecided dogs'.format(len(undecided_dogs)))
+                print('{} Undecided dogs'.format(len(undecided_dogs)))
                 return undecided_dogs
 
         # liked or disliked dogs
