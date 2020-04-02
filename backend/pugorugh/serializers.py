@@ -83,10 +83,11 @@ class UserPrefSerializer(serializers.ModelSerializer):
             'age',
             'gender',
             'size',
+            'microchipped',
         )
         model = models.UserPref
 
-    # #  Ensure that size is a comma-separated string containing only s, m, l or xl
+    #  Ensure that size is a comma-separated string containing only s, m, l or xl
     def validate_size(self, value):
         value, value_list = clean_input(value)
         for element in value_list:
@@ -96,7 +97,7 @@ class UserPrefSerializer(serializers.ModelSerializer):
                 )
         return value
 
-    # #  Ensure that gender is a comma-separated string containing only m, f or u
+    #  Ensure that gender is a comma-separated string containing only m, f or u
     def validate_gender(self, value):
         value, value_list = clean_input(value)
         for element in value_list:
@@ -104,6 +105,24 @@ class UserPrefSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     "Gender must a comma-separated string containing only m or f"
                 )
+        return value
+
+    #  Ensure that age is a comma-separated string containing only b, y, a or s
+    def validate_age(self, value):
+        value, value_list = clean_input(value)
+        for element in value_list:
+            if not re.match(r'^(b|y|a|s)$', element):
+                raise serializers.ValidationError(
+                    "Age must a comma-separated string containing only b, y, a or s"
+                )
+        return value
+
+    #  Ensure that microchipped is a comma-separated string containing only y, n, e
+    def validate_microchipped(self, value):
+        if not re.match(r'^(y|n|e)$', value):
+            raise serializers.ValidationError(
+                "Microchipped must contain only y, n or e"
+            )
         return value
 
 
