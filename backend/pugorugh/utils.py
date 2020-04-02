@@ -41,4 +41,16 @@ def get_microchipped(value):
     return 'no_preference'
 
 
-
+def clean_input(value):
+    """
+    Remove whitespace and duplicates from user input,
+    output a list of values for validation.
+    :param value:
+    :return: value (comma-separated string with duplicates removed)
+    :return: value_list (a list of values for validation)
+    """
+    value = value.replace(" ", "")  # remove any whitespace
+    value_list = value.split(',')  # convert to list for validation
+    value_list = set(value_list)  # remove any duplicates
+    value = ','.join(str(s) for s in value_list)  # convert to comma-separated string without duplicates
+    return value, value_list

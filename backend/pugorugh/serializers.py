@@ -5,6 +5,8 @@ from rest_framework import serializers
 
 from . import models
 
+from .utils import clean_input
+
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -84,16 +86,25 @@ class UserPrefSerializer(serializers.ModelSerializer):
         )
         model = models.UserPref
 
-    # #  Ensure that size is a comma separated list containing only s, m, l or xl
-    # def validate_size(self, value):
-    #
-    #     if re.match(r'^(s|m|l|xl)$', value):
-    #         return value
-    #     raise serializers.ValidationError(
-    #         "Size must be 's' for small, 'm' for medium, 'l' for large or 'xl' for extra large"
-    #     )
+    # #  Ensure that size is a comma-separated string containing only s, m, l or xl
+    def validate_size(self, value):
+        value, value_list = clean_input(value)
+        for element in value_list:
+            if not re.match(r'^(s|m|l|xl)$', element):
+                raise serializers.ValidationError(
+                    "Size must a comma-separated string containing only s, m, l or xl"
+                )
+        return value
 
-
+    # #  Ensure that gender is a comma-separated string containing only m, f or u
+    def validate_gender(self, value):
+        value, value_list = clean_input(value)
+        for element in value_list:
+            if not re.match(r'^(m|f)$', element):
+                raise serializers.ValidationError(
+                    "Gender must a comma-separated string containing only m or f"
+                )
+        return value
 
 
 class UserDogSerializer(serializers.ModelSerializer):
