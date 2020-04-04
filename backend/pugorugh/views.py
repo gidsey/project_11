@@ -48,8 +48,11 @@ class UserPrefs(CreateModelMixin, RetrieveUpdateAPIView):
 
 class SetStatus(CreateModelMixin, RetrieveUpdateAPIView):
     """
-    Set User-Dog Status (l)iked or (d)isliked.
-    Endpoints: /api/dog/<pk>/liked/ or /api/dog/<pk>/disliked/
+    Set User-Dog Status to liked, disliked or undecided.
+    Endpoints:
+        /api/dog/<pk>/liked/
+        /api/dog/<pk>/disliked/
+        /api/dog/<pk>/undecided/
     Method(s): PUT
 
     """
@@ -74,8 +77,10 @@ class SetStatus(CreateModelMixin, RetrieveUpdateAPIView):
 
 class Blacklist(CreateModelMixin, RetrieveUpdateAPIView):
     """
-    Set blacklist = True on Dog in User-Dog model
-    Endpoint: /api/dog/<pk>/blacklist/
+    Set User-Dog blacklist to be either True or False
+    Endpoints:
+        /api/dog/<pk>/blacklist/true/
+        /api/dog<pk>/blacklist/false/
     Method: PUT
     """
     queryset = models.UserDog.objects.all()
@@ -83,41 +88,20 @@ class Blacklist(CreateModelMixin, RetrieveUpdateAPIView):
 
     def get_object(self):
         dog_id = self.kwargs['pk']
+        blacklist = self.kwargs['blacklist']  # returns True or False
         try:
             user_dog = models.UserDog.objects.get(user=self.request.user.id, dog_id=dog_id)
-            user_dog.blacklist = True
+            user_dog.blacklist = blacklist
             user_dog.save()
         except models.UserDog.DoesNotExist:
             user_dog = models.UserDog.objects.create(
                 user=self.request.user,
                 dog_id=dog_id,
-                blacklist=True,
+                blacklist=blacklist,
+                status='u',
             )
         return user_dog
 
-
-class Whitelist(CreateModelMixin, RetrieveUpdateAPIView):
-    """
-    Set blacklist = False on Dog in User-Dog model
-    Endpoint: /api/dog/<pk>/whitelist/
-    Method: PUT
-    """
-    queryset = models.UserDog.objects.all()
-    serializer_class = serializers.UserDogSerializer
-
-    def get_object(self):
-        dog_id = self.kwargs['pk']
-        try:
-            user_dog = models.UserDog.objects.get(user=self.request.user.id, dog_id=dog_id)
-            user_dog.blacklist = False
-            user_dog.save()
-        except models.UserDog.DoesNotExist:
-            user_dog = models.UserDog.objects.create(
-                user=self.request.user,
-                dog_id=dog_id,
-                blacklist=False,
-            )
-        return user_dog
 
 class Dogs(RetrieveAPIView):
     """

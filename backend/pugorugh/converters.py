@@ -10,3 +10,15 @@ class StatusConverter:
 
     def to_url(self, value):
         return '%s' % value
+
+
+# noinspection PyMethodMayBeStatic
+class BlacklistConverter:
+
+    regex = 'true|false'
+
+    def to_python(self, value):
+        return str(value).title()
+
+    def to_url(self, value):
+        return '%s' % value
