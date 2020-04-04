@@ -96,6 +96,29 @@ class Blacklist(CreateModelMixin, RetrieveUpdateAPIView):
         return user_dog
 
 
+class Whitelist(CreateModelMixin, RetrieveUpdateAPIView):
+    """
+    Set blacklist = False on Dog in User-Dog model
+    Endpoint: /api/dog/<pk>/whitelist/
+    Method: PUT
+    """
+    queryset = models.UserDog.objects.all()
+    serializer_class = serializers.UserDogSerializer
+
+    def get_object(self):
+        dog_id = self.kwargs['pk']
+        try:
+            user_dog = models.UserDog.objects.get(user=self.request.user.id, dog_id=dog_id)
+            user_dog.blacklist = False
+            user_dog.save()
+        except models.UserDog.DoesNotExist:
+            user_dog = models.UserDog.objects.create(
+                user=self.request.user,
+                dog_id=dog_id,
+                blacklist=False,
+            )
+        return user_dog
+
 class Dogs(RetrieveAPIView):
     """
     Get next undecided / liked / disliked dog.
