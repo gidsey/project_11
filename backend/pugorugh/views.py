@@ -58,7 +58,7 @@ class SetStatus(CreateModelMixin, RetrieveUpdateAPIView):
 
     def get_object(self):
         dog_id = self.kwargs['pk']
-        new_status = self.kwargs['status'][0]  # returns l, d or u
+        new_status = self.kwargs['status'][0]  # returns l, d, u or b (liked, disliked or undecided)
         try:
             user_dog = models.UserDog.objects.get(user=self.request.user.id, dog_id=dog_id)
             user_dog.status = new_status
@@ -68,6 +68,30 @@ class SetStatus(CreateModelMixin, RetrieveUpdateAPIView):
                 user=self.request.user,
                 dog_id=dog_id,
                 status=new_status
+            )
+        return user_dog
+
+
+class Blacklist(CreateModelMixin, RetrieveUpdateAPIView):
+    """
+    Set blacklist = True on Dog in User-Dog model
+    Endpoint: /api/dog/<pk>/blacklist/
+    Method: PUT
+    """
+    queryset = models.UserDog.objects.all()
+    serializer_class = serializers.UserDogSerializer
+
+    def get_object(self):
+        dog_id = self.kwargs['pk']
+        try:
+            user_dog = models.UserDog.objects.get(user=self.request.user.id, dog_id=dog_id)
+            user_dog.blacklist = True
+            user_dog.save()
+        except models.UserDog.DoesNotExist:
+            user_dog = models.UserDog.objects.create(
+                user=self.request.user,
+                dog_id=dog_id,
+                blacklist=True,
             )
         return user_dog
 

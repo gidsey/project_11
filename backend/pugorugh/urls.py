@@ -22,6 +22,7 @@ urlpatterns = format_suffix_patterns([
     path('api/user/preferences/', views.UserPrefs.as_view(), name='user-prefs'),
     path('api/dog/<pk>/<ds:status>/next/', views.Dogs.as_view(), name='get-next'),
     path('api/dog/<int:pk>/<ds:status>/', views.SetStatus.as_view(), name='set-status'),
+    path('api/dog/<int:pk>/blacklist/', views.Blacklist.as_view(), name='blacklist'),
     path('api/dog/add/', views.AddDog.as_view(), name='add-dog'),
     path('api/dog/<pk>/delete/', views.DeleteDog.as_view(), name='delete-dog')
 ])

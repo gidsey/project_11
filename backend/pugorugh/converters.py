@@ -1,3 +1,4 @@
+# noinspection PyMethodMayBeStatic
 class StatusConverter:
     """
     URL Converter. Thanks to @zen on Treehouse Slack for highlighting this feature :)
