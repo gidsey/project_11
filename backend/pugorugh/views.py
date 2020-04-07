@@ -27,8 +27,8 @@ class UserRegisterView(CreateAPIView):
 class UserPrefs(CreateModelMixin, RetrieveUpdateAPIView):
     """
     List or Create User Preferences.
-    Endpoint: /api/user/preferences
-    Methods: GET and PUT
+    Endpoint: /api/user/preferences/
+    Methods: GET, PUT, PATCH
     """
     queryset = models.UserPref.objects.all()
     serializer_class = serializers.UserPrefSerializer
@@ -53,7 +53,7 @@ class SetStatus(CreateModelMixin, RetrieveUpdateAPIView):
         /api/dog/<pk>/liked/
         /api/dog/<pk>/disliked/
         /api/dog/<pk>/undecided/
-    Method(s): PUT
+    Methods: GET, PUT, PATCH
 
     """
     queryset = models.UserDog.objects.all()
@@ -81,7 +81,7 @@ class Blacklist(CreateModelMixin, RetrieveUpdateAPIView):
     Endpoints:
         /api/dog/<pk>/blacklist/true/
         /api/dog<pk>/blacklist/false/
-    Method: PUT
+    Methods: GET, PUT, PATCH
     """
     queryset = models.UserDog.objects.all()
     serializer_class = serializers.UserDogSerializer
