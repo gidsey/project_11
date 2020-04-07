@@ -2,88 +2,69 @@
 
 ![application screenshot](pugorugh_screenshot.png)
 
-## Requirements
+## Description
 
-Create the models, serializers, and views to power the provided Angular
-application. You can check through the supplied JavaScript to see what
-resources should be available or check below. You are allowed to change,
-extend, and improve the JavaScript if desired, but the final result must still
-meet all of the required features/abilities.
+A series of APIs built in [Django Rest Framework](https://www.django-rest-framework.org/) 
+to power a provided Angular application for Project 11 of the 
+[Treehouse](https://teamtreehouse.com/) Python Web Development course.
 
-You've been provided with HTML and CSS for a basic, mobile-friendly design.
-You've also been provided with a starter Django project and application, a
-serializer and views for authentication, and a bit more.
+Full details of the project, including API documentation and 
+test user account details can be found in the 
+[wiki](https://github.com/gidsey/project_11/wiki).
 
-## Starting
+## Extra Credit
 
-Create a virtualenv and install the project requirements, which are listed in
-`requirements.txt`. The easiest way to do this is with `pip install -r
-requirements.txt` while your virtualenv is activated.
+Additional API routes have been added to fulfil the 'exceeds expectations' section of the project rubric.
 
-If you need to import dogs, a `data_import` script has been provided but it
-expects a `DogSerializer` and `Dog` model as outlined below to function
-properly.
+* Endpoints to add or delete a dog:
 
-## Models
+	* `/api/dog/add/`
+	* `/api/dog/<pk>/delete/`
 
-The following models and associated field names should be present as they 
-will be expected by the JavaScript application.
 
-* `Dog` - This model represents a dog in the app.
+Additional data fields have been added to the Models which increase the application’s functionality.
 
-	Fields:
+`Dog Model` has additional 'microchipped' field indicating whether the dog has been microchipped or not. 
+This is a boolean field.
 
-	* `name`
-	* `image_filename`
-	* `breed`
-	* `age`, integer for months
-	* `gender`, "m" for male, "f" for female, "u" for unknown
-	* `size`, "s" for small, "m" for medium, "l" for large, "xl" for extra
-	  large, "u" for unknown
+`UserPref Model` also stores the users 'microchipped' preferences. This can be set to 'y' (yes), 
+'n'(no) or 'e'(either). 
 
-* `UserDog` -  This model represents a link between a user an a dog
+`UserDog Model` now stores a blacklist for Dogs. These are stored on a per-user basis. This is a boolean field.
 
-	Fields:
+The logic for each view has been updated to account for the additional data fields detailed above and [demo 
+user accounts](https://github.com/gidsey/project_11/wiki/Test-User-Accounts) can be found in the wiki, 
+which allow these to be tested.
 
-	* `user`
-	* `dog`
-	* `status`, "l" for liked, "d" for disliked
+Validation has been added to the serializers to preserve data integrity. 
 
-* `UserPref` - This model contains the user's preferences
 
-	Fields:
+Unit tests cover more than 75% of the views, models, and other functions.
 
-	* `user`
-	* `age`, "b" for baby, "y" for young, "a" for adult, "s" for senior
-	* `gender`, "m" for male, "f" for female
-	* `size`, "s" for small, "m" for medium, "l" for large, "xl" for extra
-	  large
 
-	`age`, `gender`, and `size` can contain multiple, comma-separated values
+## Atributions
 
-## Serializers
+[Scooby-Doo](https://en.wikipedia.org/wiki/Scooby-Doo_(character) by 
+[Joe Ruby](https://en.wikipedia.org/wiki/Joe_Ruby) and 
+[Ken Spears](https://en.wikipedia.org/wiki/Ken_Spears), 
+[Hanna-Barbera Productions, Inc.](https://en.wikipedia.org/wiki/Hanna-Barbera)
+ 
+[Droopy](https://en.wikipedia.org/wiki/Droopy) by 
+[Tex Avery](https://en.wikipedia.org/wiki/Tex_Avery)
 
-You'll need to provide serializers for both the `Dog` and `UserPref` models.
-Each of them should reveal all of the fields with one exception: the `UserPref`
-serializer doesn't need to reveal the user.
+[Gnasher](https://en.wikipedia.org/wiki/Gnasher) by 
+[Ian Gray](https://en.wikipedia.org/wiki/Ian_Gray_(comics) and
+[David Law](https://en.wikipedia.org/wiki/David_Law_(cartoonist)
 
-## Routes
+[Gromit](https://en.wikipedia.org/wiki/Wallace_and_Gromit#Gromit) by 
+[Nick Park](https://en.wikipedia.org/wiki/Nick_Park)
 
-The following routes are expected by the JavaScript application.
+[Snoopy](https://en.wikipedia.org/wiki/Snoopy) by
+[Charles M. Schulz](https://en.wikipedia.org/wiki/Charles_M._Schulz)
 
-* To get the next liked/disliked/undecided dog
+[Huckleberry Hound]([https://en.wikipedia.org/wiki/Huckleberry_Hound) by
+[William Hanna](https://en.wikipedia.org/wiki/William_Hanna) and
+[Joseph Barbera](https://en.wikipedia.org/wiki/Joseph_Barbera)
 
-	* `/api/dog/<pk>/liked/next/`
-	* `/api/dog/<pk>/disliked/next/`
-	* `/api/dog/<pk>/undecided/next/`
 
-* To change the dog's status
-
-	* `/api/dog/<pk>/liked/`
-	* `/api/dog/<pk>/disliked/`
-	* `/api/dog/<pk>/undecided/`
-
-* To change or set user preferences
-
-	* `/api/user/preferences/`
-
+Project work by [Chris Guy](https://www.linkedin.com/in/gidsey/), April 2020
