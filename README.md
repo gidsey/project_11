@@ -36,8 +36,11 @@ The logic for each view has been updated to account for the additional data fiel
 user accounts](https://github.com/gidsey/project_11/wiki/Test-User-Accounts) can be found in the wiki, 
 which allow these to be tested.
 
+### Validation
+
 Validation has been added to the serializers to preserve data integrity. 
 
+### Unit Tests
 
 Unit tests cover more than 75% of the views, models, and other functions.
 
