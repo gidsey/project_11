@@ -65,7 +65,7 @@ Unit tests cover more than 75% of the views, models, and other functions.
 [Snoopy](https://en.wikipedia.org/wiki/Snoopy) by
 [Charles M. Schulz](https://en.wikipedia.org/wiki/Charles_M._Schulz)
 
-[Huckleberry Hound]([https://en.wikipedia.org/wiki/Huckleberry_Hound) by
+[Huckleberry Hound](https://en.wikipedia.org/wiki/Huckleberry_Hound) by
 [William Hanna](https://en.wikipedia.org/wiki/William_Hanna) and
 [Joseph Barbera](https://en.wikipedia.org/wiki/Joseph_Barbera)
 
