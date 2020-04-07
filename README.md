@@ -47,7 +47,7 @@ Unit tests cover more than 75% of the views, models, and other functions.
 
 ## Atributions
 
-[Scooby-Doo](https://en.wikipedia.org/wiki/Scooby-Doo_(character) by 
+[Scooby-Doo](https://en.wikipedia.org/wiki/Scooby-Doo_(character)) by 
 [Joe Ruby](https://en.wikipedia.org/wiki/Joe_Ruby) and 
 [Ken Spears](https://en.wikipedia.org/wiki/Ken_Spears), 
 [Hanna-Barbera Productions, Inc.](https://en.wikipedia.org/wiki/Hanna-Barbera)
@@ -56,8 +56,8 @@ Unit tests cover more than 75% of the views, models, and other functions.
 [Tex Avery](https://en.wikipedia.org/wiki/Tex_Avery)
 
 [Gnasher](https://en.wikipedia.org/wiki/Gnasher) by 
-[Ian Gray](https://en.wikipedia.org/wiki/Ian_Gray_(comics) and
-[David Law](https://en.wikipedia.org/wiki/David_Law_(cartoonist)
+[Ian Gray](https://en.wikipedia.org/wiki/Ian_Gray_(comics)) and
+[David Law](https://en.wikipedia.org/wiki/David_Law_(cartoonist))
 
 [Gromit](https://en.wikipedia.org/wiki/Wallace_and_Gromit#Gromit) by 
 [Nick Park](https://en.wikipedia.org/wiki/Nick_Park)
