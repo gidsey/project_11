@@ -50,8 +50,7 @@ Unit tests cover more than 75% of the views, models, and other functions.
 
 [Scooby-Doo](https://en.wikipedia.org/wiki/Scooby-Doo_(character)) by 
 [Joe Ruby](https://en.wikipedia.org/wiki/Joe_Ruby) and 
-[Ken Spears](https://en.wikipedia.org/wiki/Ken_Spears), 
-[Hanna-Barbera Productions, Inc.](https://en.wikipedia.org/wiki/Hanna-Barbera)
+[Ken Spears](https://en.wikipedia.org/wiki/Ken_Spears)
  
 [Droopy](https://en.wikipedia.org/wiki/Droopy) by 
 [Tex Avery](https://en.wikipedia.org/wiki/Tex_Avery)
