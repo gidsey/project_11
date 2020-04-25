@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "gidsey.eu.pythonanywhere.com",
+    "127.0.0.1",
 ]
 
 
@@ -161,7 +162,6 @@ STATICFILES_DIRS = (
     os.path.join(os.path.dirname(__file__), '../pugorugh/static/'),
 )
 STATIC_ROOT = os.path.join(BASE_DIR, '../pugorugh/static/')
-
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 

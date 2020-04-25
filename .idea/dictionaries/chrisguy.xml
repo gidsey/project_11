@@ -1,6 +1,7 @@
 <component name="ProjectDictionaryState">
   <dictionary name="chrisguy">
     <words>
+      <w>authtoken</w>
       <w>gidsey</w>
       <w>iked</w>
       <w>isliked</w>
@@ -10,6 +11,7 @@
       <w>pythonanywhere</w>
       <w>querysets</w>
       <w>userpref</w>
+      <w>whitenoise</w>
     </words>
   </dictionary>
 </component>
