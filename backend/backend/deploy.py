@@ -13,8 +13,6 @@ import sys
 
 from django.core.wsgi import get_wsgi_application
 
-from whitenoise.django import DjangoWhiteNoise
-
 path = "/home/gidsey/project_11/backend"
 if path not in sys.path:
     sys.path.append(path)
@@ -22,4 +20,3 @@ if path not in sys.path:
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
 
 application = get_wsgi_application()
-application = DjangoWhiteNoise(application)
