@@ -1,8 +1,6 @@
 import json
 from os import environ
 from os import path
-import sys
-
 import django
 
 PROJ_DIR = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
@@ -25,7 +23,8 @@ def load_data():
 
 if __name__ == '__main__':
     sys.path.append(PROJ_DIR)
-    environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
+    if DEBUG:
+    environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.deploy_settings")
     django.setup()
 
     # Assuming your serializer is named DogSerializer
